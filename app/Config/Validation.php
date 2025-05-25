@@ -52,6 +52,13 @@ class Validation extends BaseConfig
                 'regex_match[/\A[a-zA-Z0-9\.]+\z/]',
                 'is_unique[users.username]',
             ],
+            'errors' => [
+                'is_unique' => 'Username is already taken.',
+                'regex_match' => 'Username can only contain letters, numbers, and dots.',
+                'max_length' => 'Username cannot exceed 30 characters.',
+                'min_length' => 'Username must be at least 3 characters long.'
+
+            ]
         ],
         'email' => [
             'label' => 'Auth.email',
@@ -61,6 +68,11 @@ class Validation extends BaseConfig
                 'valid_email',
                 'is_unique[auth_identities.secret]',
             ],
+            'errors' => [
+                'is_unique' => 'Email is already registered.',
+                'valid_email' => 'Please enter a valid email address.',
+                'max_length' => 'Email cannot exceed 254 characters.'
+            ]
         ],
         'password' => [
             'label' => 'Auth.password',
@@ -72,6 +84,9 @@ class Validation extends BaseConfig
         'password_confirm' => [
             'label' => 'Auth.passwordConfirm',
             'rules' => 'required|matches[password]',
+            'errors' => [
+                'matches' => 'Password and confirm password do not match.'
+            ]
         ],
 
         'referred_by' => [
@@ -81,7 +96,9 @@ class Validation extends BaseConfig
                 'integer',
                 'is_not_unique[users.id]',
                 'differs[user_id]',
+
             ],
+
         ],
     ];
 }

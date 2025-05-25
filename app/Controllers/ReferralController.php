@@ -26,7 +26,7 @@ class ReferralController extends BaseController
                 ->where('created_at >=', $thirtyDaysAgo)
                 ->findAll();
 
-            $referralEarnings = count($claims) * 0.5; // 10% of 5 points = 0.5 points per claim
+            $referralEarnings = (count($claims) * 0.5) + ($referral['level'] * (1 / 100)); // 10% of 5 points = 0.5 points per claim
             $totalEarned += $referralEarnings;
 
             $referral['claims_30days'] = count($claims);
@@ -34,10 +34,12 @@ class ReferralController extends BaseController
         }
 
         $data = [
+
             'referrals' => $referrals,
             'total_referrals' => count($referrals),
             'total_earned' => $totalEarned,
-            'referral_link' => base_url('?ref=' . $user_id)
+            'referral_link' => base_url('?ref=' . $user_id),
+
         ];
 
         return view('user/referral', $data);

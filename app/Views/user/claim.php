@@ -1,21 +1,26 @@
 <?= $this->extend('layout/page_layout') ?>
 <?= $this->section('content') ?>
-<div class="main-content">
-    <div class="content-card fade-in-up">
-        <div class="welcome-section">
-            <h1 class="welcome-title">Claim Your Points</h1>
-            <p class="text-muted fs-5">Claim your points every 5 minutes</p>
-            <div id="balance" class="mb-3 fs-4">Your Balance: <span>0</span> points</div>
-            <div id="timer" class="mb-3 fs-4">Checking claim status...</div>
-            <button type="button" class="btn btn-primary btn-lg" id="claimButton" disabled>
-                Claim Points
-            </button>
+<div class="content-card fade-in-up">
+    <div class="welcome-section">
+        <h1 class="welcome-title">Claim Points Every 5 Minutes</h1>
+
+        <div id="balance" class="mb-3 fs-4">Your Balance: <span>0</span> points</div>
+        <div id="timer" class="mb-3 fs-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
         </div>
+        <button type="button" class="btn btn-primary btn-lg" id="claimButton" disabled>
+            Claim Points
+        </button>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function () {
         let countdown;
@@ -119,4 +124,5 @@
         checkClaimStatus();
     });
 </script>
+
 <?= $this->endSection() ?>

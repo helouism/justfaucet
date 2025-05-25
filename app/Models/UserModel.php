@@ -77,7 +77,7 @@ class UserModel extends ShieldUserModel
     public function getReferrals(int $userId): array
     {
         $builder = $this->db->table($this->table);
-        $builder->select('id, username, created_at');
+        $builder->select('id, username, created_at, last_active, level');
         $builder->where('referred_by', $userId);
         $builder->orderBy('created_at', 'DESC');
 
@@ -93,5 +93,21 @@ class UserModel extends ShieldUserModel
     public function countReferrals(int $userId): int
     {
         return $this->where('referred_by', $userId)->countAllResults();
+    }
+
+    public function getExpToNextLevel(int $userId): int
+    {
+        // Assuming each level requires 100 exp to level up
+        $builder = $this->db->table($this->table);
+        $builder->select('exp, level');
+        $builder->where('id', $userId);
+        $query = $builder->get();
+
+        if ($query->getNumRows() === 0) {
+            return 0; // User not found
+        }
+
+        $row = $query->getRow();
+        return (int) (($row->level + 1) * 100 - $row->exp); // Calculate exp needed for next level
     }
 }

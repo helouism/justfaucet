@@ -26,13 +26,17 @@ class ClaimController extends BaseController
         $user_id = auth()->id();
         $claimModel = new ClaimModel();
         $userModel = new UserModel();
-        $claimAmount = 5; // Base claim amount
 
         if (!$claimModel->canClaimFaucet($user_id)) {
             return $this->response->setJSON([
                 'error' => 'Please wait 5 minutes between claims.'
             ]);
         }
+
+        // Get user's current level and calculate claim amount
+        $userData = $userModel->find($user_id);
+        $level = (int) $userData->level; // Changed from array access to object property
+        $claimAmount = 5 + ($level * 0.01);
 
         $claimData = [
             'user_id' => $user_id,
@@ -44,19 +48,23 @@ class ClaimController extends BaseController
         // Insert claim record
         $claimModel->insert($claimData);
 
-        // Update claimer's points
-        $this->db->query("UPDATE users SET points = points + ? WHERE id = ?", [$claimAmount, $user_id]);
+        // Update claimer's points and exp
+        $newExp = (int) $userData->exp + 1; // Changed from array access to object property
+        $newLevel = floor($newExp / 100);
+
+        $this->db->query(
+            "UPDATE users SET points = points + ?, exp = ?, level = ? WHERE id = ?",
+            [$claimAmount, $newExp, $newLevel, $user_id]
+        );
 
         // Check if user was referred and add bonus to referrer
         $referralInfo = $userModel->checkReferral($user_id);
         if ($referralInfo) {
-            $referralBonus = $claimAmount * 0.10; // 10% bonus
+            $referralBonus = $claimAmount * 0.10;
             $this->db->query(
                 "UPDATE users SET points = points + ? WHERE id = ?",
                 [$referralBonus, $referralInfo['referrer_id']]
             );
-
-
         }
 
         $this->db->transComplete();
@@ -70,11 +78,22 @@ class ClaimController extends BaseController
         // Get updated balance
         $newBalance = $userModel->getBalance($user_id);
 
-        return $this->response->setJSON([
-            'success' => 'Successfully claimed ' . $claimAmount . ' points!',
+        $response = [
+            'success' => 'Successfully claimed ' . number_format($claimAmount, 2) . ' points! and get 1 exp',
             'nextClaimTime' => time() + 300,
-            'newBalance' => $newBalance
-        ]);
+            'newBalance' => $newBalance,
+            'exp' => $newExp,
+            'level' => $newLevel,
+            'nextLevelExp' => ($newLevel + 1) * 100
+        ];
+
+        // Check if level up occurred
+        if ($newLevel > $level) {
+            $response['levelUp'] = true;
+            $response['newLevel'] = $newLevel;
+        }
+
+        return $this->response->setJSON($response);
     }
 
     public function getNextClaimTime()
@@ -83,10 +102,17 @@ class ClaimController extends BaseController
         $claimModel = new ClaimModel();
         $userModel = new UserModel();
 
+        $userData = $userModel->find($user_id);
+        $exp = (int) $userData->exp; // Changed from array access to object property
+        $level = (int) $userData->level; // Changed from array access to object property
+
         if ($claimModel->canClaimFaucet($user_id)) {
             return $this->response->setJSON([
                 'canClaim' => true,
-                'balance' => $userModel->getBalance($user_id)
+                'balance' => $userModel->getBalance($user_id),
+                'exp' => $exp,
+                'level' => $level,
+                'nextLevelExp' => ($level + 1) * 100
             ]);
         }
 
@@ -102,7 +128,10 @@ class ClaimController extends BaseController
         return $this->response->setJSON([
             'canClaim' => false,
             'nextClaimTime' => $nextClaimTime,
-            'balance' => $userModel->getBalance($user_id)
+            'balance' => $userModel->getBalance($user_id),
+            'exp' => $exp,
+            'level' => $level,
+            'nextLevelExp' => ($level + 1) * 100
         ]);
     }
 }

@@ -30,6 +30,8 @@
 
                 <input type="number" name="referred_by" id="referred_by"
                     value="<?= old('referred_by', $referred_by ?? '') ?>" hidden>
+
+
                 <!-- Email -->
                 <div class="form-floating mb-2">
                     <input type="email" class="form-control" id="floatingEmailInput" name="email" inputmode="email"

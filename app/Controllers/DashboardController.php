@@ -15,10 +15,12 @@ class DashboardController extends BaseController
         $user = $userModel->find($user_id);
         $referralCount = $userModel->countReferrals($user_id);
         $balance = $userModel->getBalance($user_id);
+        $expToNextLevel = $userModel->getExpToNextLevel($user_id);
         $data = [
             'user' => $user,
             'referralCount' => $referralCount,
             'balance' => $balance,
+            'expToNextLevel' => $expToNextLevel,
         ];
 
         return view('user/dashboard', $data);

@@ -1,14 +1,14 @@
-<!-- Footer -->
-<?php if (auth()->loggedIn()): ?>
-    <footer class="footer">
-        <div class="container-fluid">
-            <p class="mb-0">© 2024 FancyApp. All rights reserved.</p>
-        </div>
-    </footer>
-<?php else: ?>
-    <footer class="footer mx-auto">
-        <div class="container-fluid">
-            <p class="mb-0">© 2024 FancyApp. All rights reserved.</p>
-        </div>
-    </footer>
-<?php endif; ?>
+<footer class="footer mx-auto">
+    <div class="container-fluid">
+        <!-- Theme Toggle Button -->
+        <button class="theme-toggle mx-auto" onclick="toggleTheme()">
+            <i id="theme-icon" class="fas fa-moon"></i>
+        </button>
+
+        <p class="mb-0">
+            &copy; <span id="copyright-year"></span> JustFaucet. All rights reserved.
+
+
+        </p>
+    </div>
+</footer>
