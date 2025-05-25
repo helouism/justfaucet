@@ -20,6 +20,7 @@ class ClaimController extends BaseController
         return view('user/claim');
     }
 
+    // CLAIM ACTION
     public function action()
     {
         $this->response->setHeader('Content-Type', 'application/json');
@@ -100,6 +101,7 @@ class ClaimController extends BaseController
         return $this->response->setJSON($response);
     }
 
+    // Get next claim time and user stats
     public function getNextClaimTime()
     {
         $user_id = auth()->id();

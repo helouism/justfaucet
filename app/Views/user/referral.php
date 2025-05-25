@@ -47,16 +47,16 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="card" style="background-color: var(--card-bg);">
         <div class="card-body">
-            <h4 class="card-title mb-4">Your Referrals</h4>
+            <h4 class="card-title mb-4" style="color: var(--secondary-color);">Your Referrals</h4>
             <?php if (empty($referrals)): ?>
                 <div class="alert alert-info">
                     You haven't referred anyone yet. Share your referral link to start earning!
                 </div>
             <?php else: ?>
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-striped table-bordered table-info ">
                         <thead>
                             <tr>
                                 <th>Username</th>
