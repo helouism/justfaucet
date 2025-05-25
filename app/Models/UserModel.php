@@ -77,7 +77,7 @@ class UserModel extends ShieldUserModel
     public function getReferrals(int $userId): array
     {
         $builder = $this->db->table($this->table);
-        $builder->select('id, username, email, created_at');
+        $builder->select('id, username, created_at');
         $builder->where('referred_by', $userId);
         $builder->orderBy('created_at', 'DESC');
 
