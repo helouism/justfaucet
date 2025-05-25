@@ -67,5 +67,3 @@ class ClaimModel extends Model
         return ($currentTime - $lastClaimed) >= 300;
     }
 }
-
-

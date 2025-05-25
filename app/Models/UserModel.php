@@ -16,10 +16,11 @@ class UserModel extends ShieldUserModel
             ...$this->allowedFields,
 
             'referred_by',
+            'points', // Points column for user balance
+            'exp', // Experience points for leveling up
+            'level', // User level based on experience points
 
         ];
-
-
     }
     // Get User Balance from points column in users table
     public function getBalance(int $userId): float

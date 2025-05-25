@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Models\UserModel;
 use App\Models\ClaimModel;
 use CodeIgniter\Database\BaseConnection;
@@ -52,10 +53,13 @@ class ClaimController extends BaseController
         $newExp = (int) $userData->exp + 1; // Changed from array access to object property
         $newLevel = floor($newExp / 100);
 
-        $this->db->query(
-            "UPDATE users SET points = points + ?, exp = ?, level = ? WHERE id = ?",
-            [$claimAmount, $newExp, $newLevel, $user_id]
-        );
+        $updateUserStats = [
+            'points' => (float) $userData->points + $claimAmount, // Changed from array access to object property
+            'exp' => $newExp,
+            'level' => $newLevel
+        ];
+        $userModel->update($user_id, $updateUserStats);
+
 
         // Check if user was referred and add bonus to referrer
         $referralInfo = $userModel->checkReferral($user_id);
