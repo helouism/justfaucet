@@ -28,8 +28,25 @@ class ClaimModel extends Model
     protected $deletedField = 'deleted_at';
 
     // Validation
-    protected $validationRules = [];
-    protected $validationMessages = [];
+    protected $validationRules = [
+        'user_id' => 'required|integer',
+        'claim_amount' => 'required|decimal',
+        'ip_address' => 'required|valid_ip'
+    ];
+    protected $validationMessages = [
+        'user_id' => [
+            'required' => 'User ID is required.',
+            'integer' => 'User ID must be an integer.'
+        ],
+        'claim_amount' => [
+            'required' => 'Claim amount is required.',
+            'decimal' => 'Claim amount must be a decimal value.'
+        ],
+        'ip_address' => [
+            'required' => 'IP address is required.',
+            'valid_ip' => 'IP address must be valid.'
+        ]
+    ];
     protected $skipValidation = false;
     protected $cleanValidationRules = true;
 

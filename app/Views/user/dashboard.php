@@ -12,7 +12,7 @@
             <div class="stat-icon">
                 <i class="fas fa-dollar-sign"></i>
             </div>
-            <div class="stat-number"><?= $balance ?></div>
+            <div class="stat-number"><?= number_format($balance, 3) ?></div>
             <div class="stat-label">Points</div>
         </div>
 

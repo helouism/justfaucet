@@ -4,7 +4,7 @@
     <div class="welcome-section">
         <h1 class="welcome-title">Claim Points Every 5 Minutes</h1>
 
-        <div id="balance" class="mb-3 fs-4">Your Balance: <span>0</span> points</div>
+
         <div id="timer" class="mb-3 fs-4">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
@@ -25,9 +25,7 @@
     $(document).ready(function () {
         let countdown;
 
-        function updateBalance(balance) {
-            $('#balance span').text(balance);
-        }
+
 
         function updateTimer(nextClaimTime) {
             clearInterval(countdown);
@@ -57,7 +55,6 @@
 
         function checkClaimStatus() {
             $.get('<?= site_url('claim/getNextClaimTime') ?>', function (response) {
-                updateBalance(response.balance);
 
                 if (response.canClaim) {
                     $('#timer').text('Ready to claim!');
@@ -82,7 +79,7 @@
                 success: function (response) {
                     if (response.success) {
                         updateTimer(response.nextClaimTime);
-                        updateBalance(response.newBalance);
+
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',

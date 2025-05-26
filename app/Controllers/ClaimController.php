@@ -129,6 +129,16 @@ class ClaimController extends BaseController
         $builder->limit(1);
         $lastClaim = $builder->get()->getRow();
 
+        if (!$lastClaim) {
+            // If no claims found, user can claim immediately
+            return $this->response->setJSON([
+                'canClaim' => true,
+                'balance' => $userModel->getBalance($user_id),
+                'exp' => $exp,
+                'level' => $level,
+                'nextLevelExp' => ($level + 1) * 100
+            ]);
+        }
         $nextClaimTime = strtotime($lastClaim->created_at) + 300;
 
         return $this->response->setJSON([

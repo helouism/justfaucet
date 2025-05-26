@@ -14,12 +14,12 @@ class DashboardController extends BaseController
         // Count referrals and get users balance
         $user = $userModel->find($user_id);
         $referralCount = $userModel->countReferrals($user_id);
-        $balance = $userModel->getBalance($user_id);
+        // $balance = $userModel->getBalance($user_id);
         $expToNextLevel = $userModel->getExpToNextLevel($user_id);
         $data = [
             'user' => $user,
             'referralCount' => $referralCount,
-            'balance' => $balance,
+            'balance' => $user->points, // Assuming points is the balances
             'expToNextLevel' => $expToNextLevel,
         ];
 
