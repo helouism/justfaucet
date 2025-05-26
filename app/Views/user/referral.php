@@ -60,10 +60,11 @@
                         <thead>
                             <tr>
                                 <th>Username</th>
-                                <th>Joined Date</th>
-                                <th>Claims (Last 30 days)</th>
+                                <th>Registered</th>
                                 <th>Last Active</th>
-                                <th>Earnings</th>
+                                <th>Claims (Last 30 days)</th>
+
+                                <th>You earned</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,8 +72,9 @@
                                 <tr>
                                     <td><?= esc($referral['username']) ?></td>
                                     <td><?= date('Y-m-d', strtotime($referral['created_at'])) ?></td>
-                                    <td><?= $referral['claims_30days'] ?></td>
                                     <td><?= date('Y-m-d', strtotime($referral['last_active'])) ?></td>
+                                    <td><?= $referral['claims_30days'] ?></td>
+
                                     <td><?= number_format($referral['earnings'], 3) ?> points</td>
                                 </tr>
                             <?php endforeach; ?>
