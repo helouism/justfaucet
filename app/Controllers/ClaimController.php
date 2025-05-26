@@ -23,15 +23,21 @@ class ClaimController extends BaseController
     // CLAIM ACTION
     public function action()
     {
+
         $this->response->setHeader('Content-Type', 'application/json');
 
         $user_id = auth()->id();
+        $ipAddress = $this->request->getIPAddress();
         $claimModel = new ClaimModel();
         $userModel = new UserModel();
 
-        if (!$claimModel->canClaimFaucet($user_id)) {
+        if (!$claimModel->canUserIdClaimFaucet($user_id)) {
             return $this->response->setJSON([
                 'error' => 'Please wait 5 minutes between claims.'
+            ]);
+        } else if (!$claimModel->canIpAddressNetworkClaimFaucet($ipAddress)) {
+            return $this->response->setJSON([
+                'error' => 'Multiple accounts on the same network is not allowed.'
             ]);
         }
 
@@ -42,7 +48,8 @@ class ClaimController extends BaseController
 
         $claimData = [
             'user_id' => $user_id,
-            'claim_amount' => $claimAmount
+            'claim_amount' => $claimAmount,
+            'ip_address' => $ipAddress
         ];
 
         $this->db->transStart();
@@ -63,14 +70,7 @@ class ClaimController extends BaseController
 
 
         // Check if user was referred and add bonus to referrer
-        $referralInfo = $userModel->checkReferral($user_id);
-        if ($referralInfo) {
-            $referralBonus = $claimAmount * 0.10;
-            $this->db->query(
-                "UPDATE users SET points = points + ? WHERE id = ?",
-                [$referralBonus, $referralInfo['referrer_id']]
-            );
-        }
+        $userModel->applyReferralBonus($user_id, $claimAmount);
 
         $this->db->transComplete();
 
@@ -112,7 +112,7 @@ class ClaimController extends BaseController
         $exp = (int) $userData->exp; // Changed from array access to object property
         $level = (int) $userData->level; // Changed from array access to object property
 
-        if ($claimModel->canClaimFaucet($user_id)) {
+        if ($claimModel->canUserIdClaimFaucet($user_id) && $claimModel->canIpAddressNetworkClaimFaucet($this->request->getIPAddress())) {
             return $this->response->setJSON([
                 'canClaim' => true,
                 'balance' => $userModel->getBalance($user_id),
