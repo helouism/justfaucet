@@ -190,7 +190,7 @@ body {
   left: 0;
   top: var(--navbar-height);
   width: var(--sidebar-width);
-  height: calc(87vh - var(--navbar-height));
+  height: auto;
   background: var(--card-bg);
   border-right: 1px solid var(--border-color);
   padding: 20px 0;

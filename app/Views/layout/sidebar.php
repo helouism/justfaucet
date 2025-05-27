@@ -5,7 +5,7 @@
         <li><a href="<?= base_url('/claim') ?>" data-page="claim"><i class="fas fa-file-alt"></i>Claim</a></li>
 
         <li><a href="<?= base_url('/referral') ?>" data-page="referral"><i class="fas fa-users"></i>Referral</a></li>
-        <li><a href="<?= base_url('/withdraw') ?>" data-page="withdraw"><i
+        <li><a href="<?= base_url('/withdrawal') ?>" data-page="withdraw"><i
                     class="fas fa-money-bill-wave"></i>Withdraw</a></li>
     </ul>
 </div>

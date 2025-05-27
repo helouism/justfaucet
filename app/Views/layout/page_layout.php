@@ -52,8 +52,7 @@
     <script src="<?= base_url('/js/script.js') ?>"></script>
     <script src="<?= base_url('/js/sidebar.js') ?>"></script>
 
-    <!-- Footer -->
-    <script>document.getElementById("copyright-year").innerHTML = new Date().getFullYear();</script>
+
 </body>
 
 </html>

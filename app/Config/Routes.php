@@ -2,6 +2,7 @@
 
 use CodeIgniter\Router\RouteCollection;
 use CodeIgniter\Shield\Controllers\ActionController;
+use CodeIgniter\Shield\Controllers\LoginController;
 
 
 
@@ -16,17 +17,29 @@ $routes->get('auth/a/show', [ActionController::class, 'show']);
 $routes->post('auth/a/handle', [ActionController::class, 'handle']);
 $routes->post('auth/a/verify', [ActionController::class, 'verify']);
 
-$routes->get('login', '\App\Controllers\Auth\LoginController::loginView');;
-$routes->post('login', '\App\Controllers\Auth\LoginController::loginAction');;
+$routes->get('login', [LoginController::class, 'loginView']);
+;
+$routes->post('login', [LoginController::class, 'loginAction']);
+;
 $routes->get('register', '\App\Controllers\Auth\RegisterController::registerView');
 $routes->post('register', '\App\Controllers\Auth\RegisterController::registerAction');
+$routes->get('captcha-request', 'Captcha::request');
+$routes->post('captcha-request', 'Captcha::request');
 
 // User Routes
 $routes->get('/', 'Home::index');
-$routes->get('/dashboard', 'DashboardController::index');
-$routes->get('/profile', 'ProfileController::index');
-$routes->get('/claim', 'ClaimController::index');
-$routes->post('/claim/action', 'ClaimController::action');
-$routes->get('claim/getNextClaimTime', 'ClaimController::getNextClaimTime');
-$routes->get('/referral', 'ReferralController::index');
-$routes->get('/withdraw', 'WithdrawController::index');
+$routes->get('/dashboard', 'Dashboard::index');
+
+$routes->get('/profile', 'Profile::index');
+
+
+
+
+$routes->get('/claim', 'Claim::index');
+$routes->post('/api/claim', 'Claim::store');
+$routes->get('api/claim/status', 'Claim::show');
+
+
+$routes->get('/referral', 'Referral::index');
+$routes->get('/withdrawal', 'Withdrawal::index');
+

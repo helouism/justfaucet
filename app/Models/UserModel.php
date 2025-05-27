@@ -99,6 +99,10 @@ class UserModel extends ShieldUserModel
     public function getExpToNextLevel(int $userId): int
     {
         // Assuming each level requires 100 exp to level up
+        /* 
+        initial level when register is 0,
+        level 1 requires 100 exp, level 2 requires 200 exp, etc.
+         */
         $builder = $this->db->table($this->table);
         $builder->select('exp, level');
         $builder->where('id', $userId);

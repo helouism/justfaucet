@@ -6,7 +6,7 @@
         </button>
 
         <p class="mb-0">
-            &copy; <span id="copyright-year"></span> JustFaucet. All rights reserved.
+            &copy; <span><?= date('Y'); ?></span> JustFaucet. All rights reserved.
 
 
         </p>

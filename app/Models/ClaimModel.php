@@ -61,7 +61,6 @@ class ClaimModel extends Model
     protected $beforeDelete = [];
     protected $afterDelete = [];
 
-
     // Check if user ID can claim faucet, Faucet can be claimed every 5 minutes
     public function canUserIdClaimFaucet(int $userId): bool
     {
@@ -84,6 +83,89 @@ class ClaimModel extends Model
         return ($currentTime - $lastClaimed) >= 300;
     }
 
+    /**
+     * Get the next claim time for a user (moved from controller)
+     *
+     * @param int $userId The user ID
+     * @return int|null Next claim timestamp or null if no previous claims
+     */
+    public function getNextClaimTime(int $userId): ?int
+    {
+        $builder = $this->db->table($this->table);
+        $builder->select('created_at');
+        $builder->where('user_id', $userId);
+        $builder->orderBy('created_at', 'DESC');
+        $builder->limit(1);
+        $lastClaim = $builder->get()->getRow();
+
+        if (!$lastClaim) {
+            return null; // No claims found
+        }
+
+        return strtotime($lastClaim->created_at) + 300;
+    }
+
+    /**
+     * Get the last claim for a user
+     *
+     * @param int $userId The user ID
+     * @return object|null Last claim data or null
+     */
+    public function getLastClaim(int $userId): ?object
+    {
+        $builder = $this->db->table($this->table);
+        $builder->where('user_id', $userId);
+        $builder->orderBy('created_at', 'DESC');
+        $builder->limit(1);
+
+        return $builder->get()->getRow();
+    }
+
+    /**
+     * Get total claims count for a user
+     *
+     * @param int $userId The user ID
+     * @return int Total claims count
+     */
+    public function getTotalClaimsCount(int $userId): int
+    {
+        return $this->where('user_id', $userId)->countAllResults();
+    }
+
+    /**
+     * Get total amount claimed by a user
+     *
+     * @param int $userId The user ID
+     * @return float Total amount claimed
+     */
+    public function getTotalClaimedAmount(int $userId): float
+    {
+        $builder = $this->db->table($this->table);
+        $builder->select('SUM(claim_amount) as total');
+        $builder->where('user_id', $userId);
+        $result = $builder->get()->getRow();
+
+        return $result ? (float) $result->total : 0.0;
+    }
+
+    /**
+     * Get claims history for a user with pagination
+     *
+     * @param int $userId The user ID
+     * @param int $limit Number of records per page
+     * @param int $offset Starting record offset
+     * @return array Claims history
+     */
+    public function getClaimsHistory(int $userId, int $limit = 10, int $offset = 0): array
+    {
+        $builder = $this->db->table($this->table);
+        $builder->select('claim_amount, created_at, ip_address');
+        $builder->where('user_id', $userId);
+        $builder->orderBy('created_at', 'DESC');
+        $builder->limit($limit, $offset);
+
+        return $builder->get()->getResultArray();
+    }
 
     /**
      * Check if the given IP address (or its network) can claim the faucet.
