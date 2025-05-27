@@ -40,5 +40,10 @@ $routes->get('api/claim/status', 'Claim::show');
 
 
 $routes->get('/referral', 'Referral::index');
-$routes->get('/withdrawal', 'Withdrawal::index');
+$routes->group('withdrawal', ['filter' => 'session'], static function ($routes) {
+    $routes->get('/', 'Withdrawal::index');
+    $routes->post('request', 'Withdrawal::request');
+    $routes->post('cancel/(:num)', 'Withdrawal::cancel/$1');
+    $routes->get('history', 'Withdrawal::history'); // AJAX endpoint
+});
 
