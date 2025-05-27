@@ -17,6 +17,6 @@ class Withdrawal extends BaseController
             'canWithdraw' => $canWithdraw,
         ];
 
-        return view('user/withdrawal', $data);
+        return view('user/withdrawal/index', $data);
     }
 }

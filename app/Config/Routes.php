@@ -31,9 +31,8 @@ $routes->get('/', 'Home::index');
 $routes->get('/dashboard', 'Dashboard::index');
 
 $routes->get('/profile', 'Profile::index');
-
-
-
+$routes->get('/challenge', 'Challenge::index');
+$routes->post('challenge/claim/(:num)', 'Challenge::claim/$1');
 
 $routes->get('/claim', 'Claim::index');
 $routes->post('/api/claim', 'Claim::store');

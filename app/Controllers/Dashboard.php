@@ -29,6 +29,6 @@ class Dashboard extends BaseController
             'expToNextLevel' => $expToNextLevel,
         ];
 
-        return view('user/dashboard', $data);
+        return view('user/dashboard/index', $data);
     }
 }

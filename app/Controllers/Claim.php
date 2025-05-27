@@ -23,7 +23,7 @@ class Claim extends BaseController
 
     public function index(): string
     {
-        return view('user/claim');
+        return view('user/claim/index');
     }
 
     // STORE CLAIM ACTION - RESTful naming convention

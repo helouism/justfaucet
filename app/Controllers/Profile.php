@@ -27,6 +27,6 @@ class Profile extends BaseController
             'currentExp' => $user->exp
         ];
 
-        return view('user/profile', $data);
+        return view('user/profile/index', $data);
     }
 }

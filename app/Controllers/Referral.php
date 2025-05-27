@@ -42,6 +42,6 @@ class Referral extends BaseController
 
         ];
 
-        return view('user/referral', $data);
+        return view('user/referral/index', $data);
     }
 }

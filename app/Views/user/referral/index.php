@@ -83,7 +83,7 @@
         <div class="col-md-4">
             <div class="stat-card mb-4">
                 <i class="fas fa-percentage stat-icon"></i>
-                <div class="stat-label">Bonus Rate</div>
+                <div class="stat-label">Referral commission</div>
                 <div class="stat-number">10<small>%</small></div>
             </div>
         </div>

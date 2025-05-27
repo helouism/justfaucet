@@ -207,6 +207,23 @@ class ClaimModel extends Model
         return ($currentTime - $lastClaimed) >= 300;
     }
 
+
+    /**
+     * Get the number of claims made by a user in the last 24 hours.
+     *
+     * @param int $userId The user ID to check.
+     * @return int Number of claims made in the last 24 hours.
+     */
+    public function claimChallenge(int $userId): int
+    {
+        $builder = $this->db->table($this->table);
+        $builder->where('user_id', $userId);
+        $builder->where('created_at >=', date('Y-m-d H:i:s', strtotime('-1 day')));
+        return $builder->countAllResults();
+    }
+
+
+
     /**
      * Get the network range for an IP address.
      * Uses /24 subnet for IPv4 (Class C) and /64 for IPv6.
@@ -249,4 +266,6 @@ class ClaimModel extends Model
             'ip' => $ipAddress
         ];
     }
+
+
 }

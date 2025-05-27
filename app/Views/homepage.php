@@ -34,8 +34,8 @@
 
                         <?php if (auth()->loggedIn()): ?>
                             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                                <a href="/dashboard" class="btn btn-primary btn-lg px-4 me-md-2">Get Started</a>
-                                <a href="/dashboard" class="btn btn-success btn-lg px-4">Login</a>
+
+                                <a href="/dashboard" class="btn btn-success btn-lg px-4">Dashboard</a>
                             </div>
                         <?php else: ?>
                             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
