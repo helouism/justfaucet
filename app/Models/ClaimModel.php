@@ -209,18 +209,27 @@ class ClaimModel extends Model
 
 
     /**
-     * Get the number of claims made by a user in the last 24 hours.
+     * Get the number of claims made by a user in the current UTC day.
      *
      * @param int $userId The user ID to check.
-     * @return int Number of claims made in the last 24 hours.
+     * @return int Number of claims made today (00:00:00 UTC to 23:59:59 UTC)
      */
     public function claimChallenge(int $userId): int
     {
         $builder = $this->db->table($this->table);
+        $builder->select('COUNT(*) as total_claims');
         $builder->where('user_id', $userId);
-        $builder->where('created_at >=', date('Y-m-d H:i:s', strtotime('-1 day')));
-        return $builder->countAllResults();
+        // Get today's date in UTC
+        $utcStartOfDay = gmdate('Y-m-d 00:00:00');
+        $utcEndOfDay = gmdate('Y-m-d 23:59:59');
+        $builder->where('created_at >=', $utcStartOfDay);
+        $builder->where('created_at <=', $utcEndOfDay);
+        $query = $builder->get();
+
+        $row = $query->getRow();
+        return $row ? (int) $row->total_claims : 0;
     }
+
 
 
 

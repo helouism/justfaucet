@@ -131,26 +131,21 @@ class UserModel extends ShieldUserModel
     }
 
     /**
-     * Count how many referrals in the last 3 days with at least 10 claims
+     * Count how many level 1 referrals the user has
      * 
      * @param int $user_id The user ID to check
-     * @return int The number of referrals in the last 3 days with at least 10 claims
+     * @return int The number of level 1 referrals the user has
      */
+
     public function referralChallenge(int $user_id): int
     {
-        $threeDaysAgo = date('Y-m-d H:i:s', strtotime('-3 days'));
-
         $builder = $this->db->table($this->table);
-        $builder->select('COUNT(DISTINCT users.id) as referral_count');
-        $builder->where('users.referred_by', $user_id);
-        $builder->where('users.created_at >=', $threeDaysAgo);  // Specify the table name
-        $builder->join('claims', 'claims.user_id = users.id');
-        $builder->groupBy('users.id');
-        $builder->having('COUNT(claims.id) >=', 10);
-
-        $query = $builder->get();
-        return (int) ($query->getRow()->referral_count ?? 0);
+        $builder->where('referred_by', $user_id);
+        $builder->where('level >=', 1); // Only count level 1 or higher referrals
+        return $builder->countAllResults();
     }
+
+
 
 
 }

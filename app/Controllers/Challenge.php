@@ -31,7 +31,7 @@ class Challenge extends BaseController
                 [
                     'id' => 1,
                     'title' => 'Master Referrer',
-                    'description' => 'Refer 10 active users who claim at least 10 times in the last 3 days',
+                    'description' => 'Refer 10 users, users must be level 1 or higher',
                     'reward' => 200,
                     'progress' => $referralProgress,
                     'target' => 10
