@@ -148,8 +148,6 @@ class Claim extends BaseController
         ]);
     }
 
-    /**
-     * Validate the IconCaptcha
-     */
+
 
 }
