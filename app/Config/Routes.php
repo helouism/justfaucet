@@ -42,3 +42,5 @@ $routes->get('api/claim/status', 'Claim::show');
 $routes->get('/referral', 'Referral::index');
 $routes->get('/withdrawal', 'Withdrawal::index');
 
+
+
