@@ -19,6 +19,7 @@ class Profile extends BaseController
         $userId = $user->id;
 
         $data = [
+            'title' => 'Profile',
             'user' => $user,
             'balance' => $this->userModel->getBalance($userId),
             'totalReferrals' => $this->userModel->countReferrals($userId),

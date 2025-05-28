@@ -34,6 +34,7 @@ class Referral extends BaseController
         }
 
         $data = [
+            'title' => 'Referral',
 
             'referrals' => $referrals,
             'total_referrals' => count($referrals),

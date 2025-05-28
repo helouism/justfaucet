@@ -50,7 +50,7 @@
     <!-- THEME TOGGLE-->
     <script src="<?= base_url('js/theme.js') ?>"></script>
     <script src="<?= base_url('/js/script.js') ?>"></script>
-    <script src="<?= base_url('/js/sidebar.js') ?>"></script>
+
 
 
 </body>

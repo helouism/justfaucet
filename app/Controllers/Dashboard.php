@@ -23,6 +23,7 @@ class Dashboard extends BaseController
 
         $expToNextLevel = $this->userModel->getExpToNextLevel($user_id);
         $data = [
+            'title' => 'Dashboard',
             'user' => $user_account, // Assuming this is the user object
             'referralCount' => $referralCount,
             'balance' => $user_account->points, // Assuming this is the user object->points, // Assuming points is the balances

@@ -4,10 +4,11 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateWithdrawalsTable extends Migration
+class NewWithdrawalTable extends Migration
 {
     public function up()
     {
+
         //
         $fields = [
             'id' => [

@@ -27,6 +27,7 @@ class Challenge extends BaseController
         $claimProgress = $this->claimModel->claimChallenge($userId);
 
         $data = [
+            'title' => 'Challenges',
             'challenges' => [
                 [
                     'id' => 1,
