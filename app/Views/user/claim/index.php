@@ -46,8 +46,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-    $(document).ready(function () {
+<script>$(document).ready(function () {
         let countdown;
         let captchaCompleted = false;
         let canClaimNow = false;

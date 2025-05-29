@@ -1,50 +1,6 @@
 <?= $this->extend('layout/page_layout') ?>
 
-<?= $this->section('head') ?>
-<!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-<style>
-    .dataTables_wrapper {
-        color: var(--text-color);
-    }
 
-    .table {
-        color: var(--text-color);
-        border-color: var(--border-color);
-    }
-
-    .dataTables_info,
-    .dataTables_length,
-    .dataTables_filter {
-        color: var(--text-muted) !important;
-    }
-
-    .page-link {
-        background-color: var(--card-bg);
-        border-color: var(--border-color);
-        color: var(--text-color);
-    }
-
-    .page-item.active .page-link {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-        color: white;
-    }
-
-    .dataTables_wrapper .form-control,
-    .dataTables_wrapper .form-select {
-        background-color: var(--card-bg);
-        border-color: var(--border-color);
-        color: var(--text-color);
-    }
-
-    .dataTables_wrapper .form-control:focus,
-    .dataTables_wrapper .form-select:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
-    }
-</style>
-<?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 <div class="container py-4 fade-in-up">

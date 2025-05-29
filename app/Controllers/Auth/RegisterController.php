@@ -40,7 +40,7 @@ class RegisterController extends ShieldRegister
         $referredBy = $this->request->getGet('ref');
         if ($referredBy) {
             session()->set('referred_by', $referredBy);
-            log_message('debug', 'Stored referral ID in session: ' . $referredBy);
+            //log_message('debug', 'Stored referral ID in session: ' . $referredBy);
         }
 
         // Pass referral data to view
@@ -73,7 +73,7 @@ class RegisterController extends ShieldRegister
         $rules = $this->getValidationRules();
 
         if (!$this->validateData($this->request->getPost(), $rules, [], config('Auth')->DBGroup)) {
-            log_message('error', 'Registration validation failed: ' . json_encode($this->validator->getErrors()));
+            // // log_message('error', 'Registration validation failed: ' . json_encode($this->validator->getErrors()));
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
@@ -96,7 +96,7 @@ class RegisterController extends ShieldRegister
             'username' => $postData['username'],
             'referred_by' => $postData['referred_by'] ?? null
         ];
-        log_message('debug', 'New registration attempt with final data: ' . json_encode($logData));
+        // log_message('debug', 'New registration attempt with final data: ' . json_encode($logData));
 
         $user->fill($postData);
 
@@ -108,17 +108,17 @@ class RegisterController extends ShieldRegister
         try {
             $users->save($user);
         } catch (ValidationException $e) {
-            log_message('error', 'Registration save failed: ' . json_encode($users->errors()));
+            // log_message('error', 'Registration save failed: ' . json_encode($users->errors()));
             return redirect()->back()->withInput()->with('errors', $users->errors());
         }
 
         // To get the complete user object with ID, we need to get from the database
         $user = $users->findById($users->getInsertID());
-        log_message('info', 'User registered successfully. User ID: ' . $user->id);
+        // log_message('info', 'User registered successfully. User ID: ' . $user->id);
 
         // Add to default group
         $users->addToDefaultGroup($user);
-        log_message('debug', 'User added to default group. User ID: ' . $user->id);
+        // log_message('debug', 'User added to default group. User ID: ' . $user->id);
 
         Events::trigger('register', $user);
 
@@ -130,13 +130,13 @@ class RegisterController extends ShieldRegister
         // If an action has been defined for register, start it up.
         $hasAction = $authenticator->startUpAction('register', $user);
         if ($hasAction) {
-            log_message('debug', 'Registration requires additional action. User ID: ' . $user->id);
+            // log_message('debug', 'Registration requires additional action. User ID: ' . $user->id);
             return redirect()->route('auth-action-show');
         }
 
         // Set the user active
         $user->activate();
-        log_message('debug', 'User account activated. User ID: ' . $user->id);
+        // log_message('debug', 'User account activated. User ID: ' . $user->id);
 
         $authenticator->completeLogin($user);
 
