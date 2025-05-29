@@ -164,7 +164,7 @@
         }
 
         function checkClaimStatus() {
-            $.get('<?= site_url('api/claim/status') ?>', function (response) {
+            $.get('<?= site_url('claim/status') ?>', function (response) {
                 if (response.canClaim) {
                     // User can claim immediately - show captcha right away
                     $('#timer').text('Ready to claim!');
@@ -195,7 +195,7 @@
             $spinner.show();
 
             $.ajax({
-                url: '<?= site_url('api/claim') ?>',
+                url: '<?= site_url('claim/action') ?>',
                 method: 'POST',
                 data: {
                     '<?= csrf_token() ?>': '<?= csrf_hash() ?>',

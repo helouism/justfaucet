@@ -6,7 +6,12 @@
         </button>
 
         <p class="mb-0">
-            &copy; <span><?= date('Y'); ?></span> JustFaucet. All rights reserved.
+            &copy; <span><?= date('Y'); ?></span> JustFaucet. All rights reserved. <br>
+            <?php
+            date("H:i");
+            ?>
+
+
 
 
         </p>

@@ -2,6 +2,8 @@
     <ul class="sidebar-menu">
         <?php $user = auth()->user(); ?>
         <?php if ($user->inGroup('admin')): ?>
+            <li><a href="<?= base_url('/admin') ?>" class="<?= $title === 'Admin Dashboard' ? 'active' : '' ?>"><i
+                        class="fas fa-tachometer-alt"></i>Admin Dashboard</a></li>
 
             <li><a href="<?= base_url('/admin/manage-users') ?>" class="<?= $title === 'Manage Users' ? 'active' : '' ?>"><i
                         class="fas fa-users"></i>Manage

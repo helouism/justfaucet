@@ -26,26 +26,24 @@ $routes->post('register', '\App\Controllers\Auth\RegisterController::registerAct
 $routes->get('captcha-request', 'Captcha::request');
 $routes->post('captcha-request', 'Captcha::request');
 
-// User Routes
+// Public Routes (no authentication required)
 $routes->get('/', 'Home::index');
-$routes->get('/dashboard', 'Dashboard::index');
+// User Routes Group
+$routes->group('', ['filter' => 'group:user'], static function ($routes) {
+    $routes->get('dashboard', 'Dashboard::index');
+    $routes->get('profile', 'Profile::index');
+    $routes->get('challenge', 'Challenge::index');
+    $routes->post('challenge/claim/(:num)', 'Challenge::claim/$1');
+    $routes->get('claim', 'Claim::index');
+    $routes->post('claim/action', 'Claim::store');
+    $routes->get('claim/status', 'Claim::show');
+    $routes->get('referral', 'Referral::index');
+    $routes->get('withdrawal', 'Withdrawal::index');
+});
 
-$routes->get('/profile', 'Profile::index');
-$routes->get('/challenge', 'Challenge::index');
-$routes->post('challenge/claim/(:num)', 'Challenge::claim/$1');
-
-$routes->get('/claim', 'Claim::index');
-$routes->post('/api/claim', 'Claim::store');
-$routes->get('api/claim/status', 'Claim::show');
-
-
-$routes->get('/referral', 'Referral::index');
-$routes->get('/withdrawal', 'Withdrawal::index');
-
-
-
-// Admin Routes
-$routes->get('/admin', 'Admin::index');
-
-$routes->get('/admin/manage-withdrawals', 'Admin::manageWithdrawals');
-$routes->get('/admin/manage-users', 'Admin::manageUsers');
+// Admin Routes Group
+$routes->group('admin', ['filter' => 'group:admin'], static function ($routes) {
+    $routes->get('/', 'Admin::index');
+    $routes->get('manage-withdrawals', 'Admin::manageWithdrawals');
+    $routes->get('manage-users', 'Admin::manageUsers');
+});

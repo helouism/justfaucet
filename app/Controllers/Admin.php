@@ -27,10 +27,6 @@ class Admin extends BaseController
 
     public function manageWithdrawals(): string
     {
-        $user = auth()->user();
-        if (!$user->inGroup('admin')) {
-            return view('/');
-        }
 
 
         $withdrawals = $this->withdrawalModel->getAllWithdrawals();
@@ -45,10 +41,9 @@ class Admin extends BaseController
 
     public function manageUsers(): string
     {
+
         $user = auth()->user();
-        if (!$user->inGroup('admin')) {
-            return view('/');
-        }
+
 
 
         $users = $this->userModel->getAllUsers();
