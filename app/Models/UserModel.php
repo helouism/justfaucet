@@ -49,6 +49,13 @@ class UserModel extends ShieldUserModel
         return (float) $row->points; // Return the points as a float
     }
 
+    public function getUserEmail(int $userId): string
+    {
+        $users = auth()->getProvider();
+        $user = $users->findById($userId);
+        return $user->email ?? ''; // Return email or empty string if not found
+    }
+
     /**
      * Check if user was referred by another user
      *
@@ -155,6 +162,21 @@ class UserModel extends ShieldUserModel
         $builder->where('level >=', 1); // Only count level 1 or higher referrals
         return $builder->countAllResults();
     }
+
+    public function decrementPoints(int $userId, float $amount): bool
+    {
+        // Ensure amount is positive and user exists
+        if ($amount <= 0 || !$this->find($userId)) {
+            return false;
+        }
+
+        // Update points by decrementing the specified amount
+        return $this->db->table($this->table)
+            ->set('points', "points - {$amount}", false) // Use false to prevent escaping
+            ->where('id', $userId)
+            ->update();
+    }
+
 
 
 

@@ -12,7 +12,7 @@ class WithdrawalModel extends Model
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['user_id', 'amount', 'status'];
+    protected $allowedFields = ['user_id', 'amount', 'status', 'faucetpay_payout_id'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -28,10 +28,10 @@ class WithdrawalModel extends Model
     protected $deletedField = 'deleted_at';
 
     // Validation
-    protected $validationRules = ['
-        user_id' => 'required|integer',
-        'amount' => 'required|decimal',
-        'status' => 'in_list[pending,approved,rejected]'
+    protected $validationRules = [
+        'user_id' => 'required|integer',
+        'amount' => 'required|integer|greater_than_equal_to[2000]|less_than_equal_to[100000]',
+        'status' => 'in_list[paid,failed]'
     ];
     protected $validationMessages = [];
     protected $skipValidation = false;
@@ -90,6 +90,9 @@ class WithdrawalModel extends Model
     public function getAllWithdrawals(): array
     {
         $builder = $this->db->table($this->table);
+        $builder->select('withdrawals.*, users.username');
+        $builder->join('users', 'users.id = withdrawals.user_id', 'left');
+        $builder->orderBy('withdrawals.created_at', 'DESC'); // Order by created_at in descending order
         $query = $builder->get();
 
         if ($query->getNumRows() === 0) {
@@ -99,5 +102,12 @@ class WithdrawalModel extends Model
         return $query->getResultArray(); // Return all withdrawals as an array
     }
 
+    public function convertPointsToUSD(int $points): float
+    {
+        // Assuming 1 USD = 10000 Points
+        $conversionRate = 10000.0; // 1 USD = 10000 Points
+        return $points / $conversionRate; // Convert points to USD
+
+    }
 
 }

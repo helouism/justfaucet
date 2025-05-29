@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "71d05980a2927e0eb8141f9115aa8f19",
+    "content-hash": "86c39ad0ad3216657380c5b5a22d1f81",
     "packages": [
         {
             "name": "codeigniter4/framework",
@@ -331,6 +331,43 @@
                 }
             ],
             "time": "2025-05-06T19:29:36+00:00"
+        },
+        {
+            "name": "mahtab2003/faucetpay",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mahtab2003/FaucetPay-API.git",
+                "reference": "f76830532112569e5cb36e4c3d7c2351ee7278fe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mahtab2003/FaucetPay-API/zipball/f76830532112569e5cb36e4c3d7c2351ee7278fe",
+                "reference": "f76830532112569e5cb36e4c3d7c2351ee7278fe",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mahtab2003\\FaucetPay\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MPL-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Mahtab Hassan",
+                    "email": "mahtabhassan159@gmail.com"
+                }
+            ],
+            "description": "An API Wrapper to Interact with FaucetPay Account.",
+            "support": {
+                "issues": "https://github.com/mahtab2003/FaucetPay-API/issues",
+                "source": "https://github.com/mahtab2003/FaucetPay-API/tree/1.0"
+            },
+            "time": "2022-06-02T05:55:34+00:00"
         },
         {
             "name": "psr/log",

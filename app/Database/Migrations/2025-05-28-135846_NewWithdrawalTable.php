@@ -28,8 +28,12 @@ class NewWithdrawalTable extends Migration
             ],
             'status' => [
                 'type' => 'ENUM',
-                'constraint' => ['pending', 'approved', 'rejected'],
-                'default' => 'pending',
+                'constraint' => ['paid', 'failed'],
+
+            ],
+            'faucetpay_payout_id' => [
+                'type' => 'INTEGER',
+                'constraint' => 11,
             ],
             'created_at DATETIME DEFAULT CURRENT_TIMESTAMP',
             'updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
@@ -38,6 +42,7 @@ class NewWithdrawalTable extends Migration
         $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addField($fields);
         $this->forge->addKey('id', true); // Primary key
+        $this->forge->addUniqueKey('faucetpay_payout_id'); // Unique key for faucetpay_payout_id
         $this->forge->createTable('withdrawals');
     }
 

@@ -39,6 +39,7 @@ $routes->group('', ['filter' => 'group:user'], static function ($routes) {
     $routes->get('claim/status', 'Claim::show');
     $routes->get('referral', 'Referral::index');
     $routes->get('withdrawal', 'Withdrawal::index');
+    $routes->post('withdrawal/send', 'Withdrawal::sendPayment');
 });
 
 // Admin Routes Group
@@ -46,4 +47,9 @@ $routes->group('admin', ['filter' => 'group:admin'], static function ($routes) {
     $routes->get('/', 'Admin::index');
     $routes->get('manage-withdrawals', 'Admin::manageWithdrawals');
     $routes->get('manage-users', 'Admin::manageUsers');
+    $routes->get('manage-users/edit/(:num)', 'Admin::editUser/$1');
+
+    $routes->post('manage-users/update/(:num)', 'Admin::updateUser/$1');
+    $routes->get('manage-users/ban/(:num)', 'Admin::banUser/$1');
+    $routes->post('manage-users/ban/(:num)', 'Admin::banUser/$1');
 });

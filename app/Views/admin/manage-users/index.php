@@ -15,6 +15,7 @@
                         <th>Registered At</th>
                         <th>Last Active</th>
                         <th>Level</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -26,6 +27,18 @@
                             <td><?= esc($user['created_at']) ?></td>
                             <td><?= esc($user['last_active']) ?></td>
                             <td><?= esc($user['level']) ?></td>
+                            <td>
+                                <!-- Edit and Ban User button -->
+
+                                <a href="<?= site_url('admin/manage-users/edit/' . $user['id']) ?>"
+                                    class="btn btn-primary btn-sm">Edit</a>
+
+
+                                <a href="<?= site_url('admin/manage-users/ban/' . $user['id']) ?>"
+                                    class="btn btn-danger btn-sm">Ban</a>
+
+
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

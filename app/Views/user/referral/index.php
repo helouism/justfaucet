@@ -33,7 +33,7 @@
             <div class="stat-card mb-4">
                 <i class="fas fa-coins stat-icon"></i>
                 <div class="stat-label">Total Earned</div>
-                <div class="stat-number"><?= number_format($total_earned, 3) ?><small>points</small></div>
+                <div class="stat-number"><?= number_format($total_earned, 2) ?><small>points</small></div>
             </div>
         </div>
         <div class="col-md-4">
@@ -76,7 +76,7 @@
                                     </td>
                                     <td><?= $referral['claims_30days'] ?></td>
                                     <td data-sort="<?= $referral['earnings'] ?>">
-                                        <?= number_format($referral['earnings'], 3) ?> points
+                                        <?= number_format($referral['earnings'], 2) ?> points
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
