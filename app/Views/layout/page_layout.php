@@ -22,7 +22,14 @@
 
     <link rel="stylesheet" href="<?= base_url('/css/index.css') ?>">
 
+    <?php if ($title === 'Referral' || $title === 'Manage Users' || $title === 'Manage Withdrawals'): ?>
+
+        <!-- DataTables CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+        <link rel="stylesheet" href="<?= base_url("/css/datatables/datatables.css") ?>">
+    <?php endif; ?>
 </head>
+
 
 <body>
 
