@@ -45,6 +45,8 @@
 
     <!-- THEME TOGGLE-->
     <script src="<?= base_url('js/theme.js') ?>"></script>
+
+    <!-- SIDEBAR TOGGLE -->
     <script src="<?= base_url('/js/script.js') ?>"></script>
 
 

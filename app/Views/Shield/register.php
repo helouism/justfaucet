@@ -2,6 +2,7 @@
 
 <?= $this->section('title') ?><?= lang('Auth.register') ?> <?= $this->endSection() ?>
 
+
 <?= $this->section('main') ?>
 
 <div class="container d-flex justify-content-center p-5">
