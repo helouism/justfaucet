@@ -85,4 +85,19 @@ class WithdrawalModel extends Model
         $row = $query->getRow();
         return (float) $row->points >= 2000.0; // Check if points are at least 2000
     }
+
+    // Get All Withdrawals
+    public function getAllWithdrawals(): array
+    {
+        $builder = $this->db->table($this->table);
+        $query = $builder->get();
+
+        if ($query->getNumRows() === 0) {
+            return []; // No withdrawals found
+        }
+
+        return $query->getResultArray(); // Return all withdrawals as an array
+    }
+
+
 }

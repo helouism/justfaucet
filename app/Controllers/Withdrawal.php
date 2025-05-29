@@ -5,13 +5,18 @@ use App\Models\WithdrawalModel;
 
 class Withdrawal extends BaseController
 {
+    protected $withdrawalModel;
+    public function __construct()
+    {
+        $this->withdrawalModel = new WithdrawalModel();
+    }
     public function index(): string
     {
 
-        $withdrawalModel = new WithdrawalModel();
+
         $user_id = auth()->id();
-        $userWithdrawals = $withdrawalModel->getWithdrawalsByUser($user_id);
-        $canWithdraw = $withdrawalModel->canWithdraw($user_id);
+        $userWithdrawals = $this->withdrawalModel->getWithdrawalsByUser($user_id);
+        $canWithdraw = $this->withdrawalModel->canWithdraw($user_id);
         $data = [
             'title' => 'Withdrawals',
             'withdrawals' => $userWithdrawals,
@@ -20,4 +25,6 @@ class Withdrawal extends BaseController
 
         return view('user/withdrawal/index', $data);
     }
+
+
 }

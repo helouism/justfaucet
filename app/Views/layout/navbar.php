@@ -28,7 +28,7 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item text-danger" href="logout">
+                            <a class="dropdown-item text-danger" href="<?= base_url('logout') ?>">
                                 <i class="fas fa-sign-out-alt me-2"></i>Logout
                             </a>
                         </li>

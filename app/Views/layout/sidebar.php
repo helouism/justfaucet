@@ -6,10 +6,11 @@
             <li><a href="<?= base_url('/admin/manage-users') ?>" class="<?= $title === 'Manage Users' ? 'active' : '' ?>"><i
                         class="fas fa-users"></i>Manage
                     Users</a></li>
-            <li a href="<?= base_url('/admin/manage-withdrawals') ?>"
-                class="<?= $title === 'Manage Withdrawals' ? 'active' : '' ?>"><i
-                    class="fa-solid fa-money-bill-transfer"></i>Manage
-                Withdrawals</a></li>
+
+            <li> <a href="<?= base_url('/admin/manage-withdrawals') ?>"
+                    class="<?= $title === 'Manage Withdrawals' ? 'active' : '' ?>"><i
+                        class="fa-solid fa-money-bill-transfer"></i>Manage
+                    Withdrawals</a></li>
 
         <?php endif; ?>
         <?php if ($user->inGroup('user')): ?>

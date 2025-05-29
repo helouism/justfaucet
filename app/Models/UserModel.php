@@ -22,6 +22,17 @@ class UserModel extends ShieldUserModel
 
         ];
     }
+
+    // Get All Users
+    public function getAllUsers(): array
+    {
+        $builder = $this->db->table($this->table);
+        $builder->select('id, username, points, level, created_at, last_active');
+        $builder->orderBy('created_at', 'ASC');
+
+        return $builder->get()->getResultArray();
+    }
+
     // Get User Balance from points column in users table
     public function getBalance(int $userId): float
     {
@@ -78,7 +89,7 @@ class UserModel extends ShieldUserModel
     public function getReferrals(int $userId): array
     {
         $builder = $this->db->table($this->table);
-        $builder->select('id, username, created_at, last_active, level');
+        $builder->select('id, username, active, created_at, last_active, level');
         $builder->where('referred_by', $userId);
         $builder->orderBy('created_at', 'DESC');
 

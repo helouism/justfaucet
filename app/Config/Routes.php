@@ -42,3 +42,8 @@ $routes->get('api/claim/status', 'Claim::show');
 $routes->get('/referral', 'Referral::index');
 $routes->get('/withdrawal', 'Withdrawal::index');
 
+// Admin Routes
+$routes->get('/admin', 'Admin::index');
+
+$routes->get('/admin/manage-withdrawals', 'Admin::manageWithdrawals');
+$routes->get('/admin/manage-users', 'Admin::manageUsers');
