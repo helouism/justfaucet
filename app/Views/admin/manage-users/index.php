@@ -33,7 +33,7 @@
                         <th>ID</th>
 
                         <th>Username</th>
-                        <th>Active</th>
+                        <th>Email Activated</th>
                         <th>Status</th>
                         <th>Registered At</th>
                         <th>Last Active</th>
@@ -47,12 +47,18 @@
                             <td><?= esc($user['id']) ?></td>
 
                             <td><?= esc($user['username']) ?></td>
-                            <td><?= $isActive ?></td>
+                            <td>
+                                <?php if ($user['is_active']): ?>
+                                    <span>Yes</span>
+                                <?php else: ?>
+                                    <span>No</span>
+                                <?php endif; ?>
+                            </td>
                             <td>
                                 <?php if ($user['is_banned']): ?>
                                     <span class="badge bg-danger">Banned</span>
                                 <?php else: ?>
-                                    <span class="badge bg-success">Active</span>
+                                    <span class="badge bg-success">Not Banned</span>
                                 <?php endif; ?>
                             </td>
                             <td><?= esc($user['created_at']) ?></td>

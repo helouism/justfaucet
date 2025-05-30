@@ -54,6 +54,7 @@ class Admin extends BaseController
         foreach ($users as $userData) {
             $userEntity = $userProvider->findById($userData['id']);
             $userData['is_banned'] = $userEntity ? $userEntity->isBanned() : false;
+            $userData['is_active'] = $userEntity ? $userEntity->isActivated() : false;
 
             // If using getAllUsersWithGroups(), you can also display the groups:
             // $userData['user_groups'] = $userData['groups'] ?? 'No groups';
@@ -61,11 +62,11 @@ class Admin extends BaseController
             $processedUsers[] = $userData;
         }
 
-        $isActive = $user->isActivated() ? "Yes" : "No";
+
 
         $data = [
             'title' => 'Manage Users',
-            'isActive' => $isActive,
+
             'users' => $processedUsers,
         ];
 
