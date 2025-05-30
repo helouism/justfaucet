@@ -45,11 +45,14 @@ $routes->group('', ['filter' => 'group:user'], static function ($routes) {
 // Admin Routes Group
 $routes->group('admin', ['filter' => 'group:admin'], static function ($routes) {
     $routes->get('/', 'Admin::index');
+    $routes->get('profile', 'Admin::profile');
     $routes->get('manage-withdrawals', 'Admin::manageWithdrawals');
     $routes->get('manage-users', 'Admin::manageUsers');
     $routes->get('manage-users/edit/(:num)', 'Admin::editUser/$1');
 
     $routes->post('manage-users/update/(:num)', 'Admin::updateUser/$1');
     $routes->get('manage-users/ban/(:num)', 'Admin::banUser/$1');
-    $routes->post('manage-users/ban/(:num)', 'Admin::banUser/$1');
+
+    $routes->get('manage-users/unban/(:num)', 'Admin::unbanUser/$1');
+
 });

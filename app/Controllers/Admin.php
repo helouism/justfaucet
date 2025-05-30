@@ -25,6 +25,19 @@ class Admin extends BaseController
         return view('admin/index', $data);
     }
 
+    public function profile(): string
+    {
+        $user = auth()->user();
+
+
+        $data = [
+            'title' => 'Profile',
+            'user' => $user
+
+        ];
+
+        return view('admin/profile/index', $data);
+    }
     public function manageWithdrawals(): string
     {
 
@@ -42,12 +55,19 @@ class Admin extends BaseController
 
     public function manageUsers(): string
     {
-
         $user = auth()->user();
-
-
-
         $users = $this->userModel->getAllUsers();
+
+        // Process users to include ban status
+        $processedUsers = [];
+        $userProvider = auth()->getProvider();
+
+        foreach ($users as $userData) {
+            $userEntity = $userProvider->findById($userData['id']);
+            $userData['is_banned'] = $userEntity ? $userEntity->isBanned() : false;
+            $processedUsers[] = $userData;
+        }
+
         $isActive = "No";
         if ($user->isActivated()) {
             $isActive = "Yes";
@@ -58,12 +78,68 @@ class Admin extends BaseController
         $data = [
             'title' => 'Manage Users',
             'isActive' => $isActive,
-            'users' => $users,
+            'users' => $processedUsers,
         ];
 
         return view('admin/manage-users/index', $data);
     }
+    public function banUser(int $userId): \CodeIgniter\HTTP\RedirectResponse
+    {
+        try {
+            // Get the user provider
+            $userProvider = auth()->getProvider();
 
+            // Find the user by ID
+            $user = $userProvider->findById($userId);
+
+            if (!$user) {
+                return redirect()->to('admin/manage-users')->with('error', 'User not found.');
+            }
+
+            // Check if user is already banned
+            if ($user->isBanned()) {
+                return redirect()->to('admin/manage-users')->with('warning', 'User is already banned.');
+            }
+
+            // Ban the user with a reason
+            $user->ban('Banned by administrator');
+
+            return redirect()->to('admin/manage-users')->with('success', 'User has been banned successfully.');
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error banning user: ' . $e->getMessage());
+            return redirect()->to('admin/manage-users')->with('error', 'An error occurred while banning the user.');
+        }
+    }
+
+    public function unbanUser(int $userId): \CodeIgniter\HTTP\RedirectResponse
+    {
+        try {
+            // Get the user provider
+            $userProvider = auth()->getProvider();
+
+            // Find the user by ID
+            $user = $userProvider->findById($userId);
+
+            if (!$user) {
+                return redirect()->to('admin/manage-users')->with('error', 'User not found.');
+            }
+
+            // Check if user is actually banned
+            if (!$user->isBanned()) {
+                return redirect()->to('admin/manage-users')->with('warning', 'User is not banned.');
+            }
+
+            // Unban the user
+            $user->unBan();
+
+            return redirect()->to('admin/manage-users')->with('success', 'User has been unbanned successfully.');
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error unbanning user: ' . $e->getMessage());
+            return redirect()->to('admin/manage-users')->with('error', 'An error occurred while unbanning the user.');
+        }
+    }
     public function editUser(int $userId)
     {
         return view('admin/manage-users/edit', [
@@ -137,14 +213,7 @@ class Admin extends BaseController
     }
 
 
-    public function banUser(int $userId): \CodeIgniter\HTTP\RedirectResponse
-    {
-        $users = auth()->getProvider();
 
-
-        $user = $users->ban();
-        return redirect()->back()->with('success', 'User banned successfully.');
-    }
 
 
 }

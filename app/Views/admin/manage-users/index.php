@@ -3,6 +3,28 @@
 <div class="container py-4">
     <h1 class="mb-4">Manage Users</h1>
 
+    <!-- Flash Messages -->
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?= session()->getFlashdata('success') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?= session()->getFlashdata('error') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('warning')): ?>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <?= session()->getFlashdata('warning') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+
     <div class="card">
         <div class="card-body">
             <table id="usersTable" class="table table-striped table-bordered">
@@ -10,8 +32,8 @@
                     <tr>
                         <th>ID</th>
                         <th>Username</th>
-
                         <th>Active</th>
+                        <th>Status</th>
                         <th>Registered At</th>
                         <th>Last Active</th>
                         <th>Level</th>
@@ -24,25 +46,35 @@
                             <td><?= esc($user['id']) ?></td>
                             <td><?= esc($user['username']) ?></td>
                             <td><?= $isActive ?></td>
+                            <td>
+                                <?php if ($user['is_banned']): ?>
+                                    <span class="badge bg-danger">Banned</span>
+                                <?php else: ?>
+                                    <span class="badge bg-success">Active</span>
+                                <?php endif; ?>
+                            </td>
                             <td><?= esc($user['created_at']) ?></td>
                             <td><?= esc($user['last_active']) ?></td>
                             <td><?= esc($user['level']) ?></td>
                             <td>
-                                <!-- Edit and Ban User button -->
-
+                                <!-- Edit User button -->
                                 <a href="<?= site_url('admin/manage-users/edit/' . $user['id']) ?>"
                                     class="btn btn-primary btn-sm">Edit</a>
 
-
-                                <a href="<?= site_url('admin/manage-users/ban/' . $user['id']) ?>"
-                                    class="btn btn-danger btn-sm">Ban</a>
-
-
+                                <!-- Conditional Ban/Unban button -->
+                                <?php if ($user['is_banned']): ?>
+                                    <a href="<?= site_url('admin/manage-users/unban/' . $user['id']) ?>"
+                                        class="btn btn-success btn-sm"
+                                        onclick="return confirm('Are you sure you want to unban this user?')">Unban</a>
+                                <?php else: ?>
+                                    <a href="<?= site_url('admin/manage-users/ban/' . $user['id']) ?>"
+                                        class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Are you sure you want to ban this user?')">Ban</a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
-
             </table>
         </div>
     </div>
