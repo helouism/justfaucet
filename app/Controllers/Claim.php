@@ -5,8 +5,7 @@ namespace App\Controllers;
 use App\Models\UserModel;
 use App\Models\ClaimModel;
 use CodeIgniter\Database\BaseConnection;
-use IconCaptcha\Challenge\ValidationResult;
-use IconCaptcha\IconCaptcha;
+
 
 class Claim extends BaseController
 {
@@ -27,7 +26,7 @@ class Claim extends BaseController
         return view('user/claim/index', $data);
     }
 
-    // STORE CLAIM ACTION - RESTful naming convention
+    // STORE CLAIM ACTION -
     public function store()
     {
         $this->response->setHeader('Content-Type', 'application/json');
@@ -105,7 +104,7 @@ class Claim extends BaseController
         return $this->response->setJSON($response);
     }
 
-    // SHOW CLAIM STATUS - RESTful naming convention
+    // SHOW CLAIM STATUS
     public function show()
     {
         $user_id = auth()->id();
