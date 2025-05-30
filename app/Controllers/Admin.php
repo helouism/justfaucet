@@ -38,25 +38,14 @@ class Admin extends BaseController
 
         return view('admin/profile/index', $data);
     }
-    public function manageWithdrawals(): string
-    {
-
-
-        $withdrawals = $this->withdrawalModel->getAllWithdrawals();
-
-        $data = [
-            'title' => 'Manage Withdrawals',
-            'withdrawals' => $withdrawals,
-
-        ];
-
-        return view('admin/manage-withdrawals/index', $data);
-    }
 
     public function manageUsers(): string
     {
         $user = auth()->user();
+
+        //Get only users in 'user' group
         $users = $this->userModel->getAllUsers();
+
 
         // Process users to include ban status
         $processedUsers = [];
@@ -65,15 +54,14 @@ class Admin extends BaseController
         foreach ($users as $userData) {
             $userEntity = $userProvider->findById($userData['id']);
             $userData['is_banned'] = $userEntity ? $userEntity->isBanned() : false;
+
+            // If using getAllUsersWithGroups(), you can also display the groups:
+            // $userData['user_groups'] = $userData['groups'] ?? 'No groups';
+
             $processedUsers[] = $userData;
         }
 
-        $isActive = "No";
-        if ($user->isActivated()) {
-            $isActive = "Yes";
-        } else {
-            $isActive = "No";
-        }
+        $isActive = $user->isActivated() ? "Yes" : "No";
 
         $data = [
             'title' => 'Manage Users',

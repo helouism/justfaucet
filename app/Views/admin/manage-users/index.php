@@ -3,7 +3,7 @@
 <div class="container py-4">
     <h1 class="mb-4">Manage Users</h1>
 
-    <!-- Flash Messages -->
+
     <?php if (session()->getFlashdata('success')): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <?= session()->getFlashdata('success') ?>
@@ -31,6 +31,7 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+
                         <th>Username</th>
                         <th>Active</th>
                         <th>Status</th>
@@ -44,6 +45,7 @@
                     <?php foreach ($users as $user): ?>
                         <tr>
                             <td><?= esc($user['id']) ?></td>
+
                             <td><?= esc($user['username']) ?></td>
                             <td><?= $isActive ?></td>
                             <td>
@@ -61,7 +63,7 @@
                                 <a href="<?= site_url('admin/manage-users/edit/' . $user['id']) ?>"
                                     class="btn btn-primary btn-sm">Edit</a>
 
-                                <!-- Conditional Ban/Unban button -->
+                                <!-- Ban/Unban -->
                                 <?php if ($user['is_banned']): ?>
                                     <a href="<?= site_url('admin/manage-users/unban/' . $user['id']) ?>"
                                         class="btn btn-success btn-sm"
@@ -79,6 +81,9 @@
         </div>
     </div>
 </div>
+<script src="<?= base_url("/js/jquery/jquery.min.js") ?>"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#usersTable').DataTable({

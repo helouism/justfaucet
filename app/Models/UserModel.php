@@ -23,15 +23,27 @@ class UserModel extends ShieldUserModel
         ];
     }
 
-    // Get All Users
+    // Get All Users in User group
     public function getAllUsers(): array
     {
         $builder = $this->db->table($this->table);
         $builder->select('id, username, points, level, created_at, last_active');
         $builder->orderBy('created_at', 'ASC');
 
-        return $builder->get()->getResultArray();
+        $users = $builder->get()->getResultArray();
+        $userProvider = auth()->getProvider();
+        $filteredUsers = [];
+
+        foreach ($users as $userData) {
+            $userEntity = $userProvider->findById($userData['id']);
+            if ($userEntity && $userEntity->inGroup('user')) {
+                $filteredUsers[] = $userData;
+            }
+        }
+
+        return $filteredUsers;
     }
+
 
     // Get User Balance from points column in users table
     public function getBalance(int $userId): float
