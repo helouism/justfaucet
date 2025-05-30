@@ -71,6 +71,22 @@ class Admin extends BaseController
 
         return view('admin/manage-users/index', $data);
     }
+
+    public function manageWithdrawals(): string
+    {
+
+
+        $withdrawals = $this->withdrawalModel->getAllWithdrawals();
+
+        $data = [
+            'title' => 'Manage Withdrawals',
+            'withdrawals' => $withdrawals,
+
+        ];
+
+        return view('admin/manage-withdrawals/index', $data);
+    }
+
     public function banUser(int $userId): \CodeIgniter\HTTP\RedirectResponse
     {
         try {
