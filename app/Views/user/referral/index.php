@@ -1,7 +1,4 @@
 <?= $this->extend('layout/page_layout') ?>
-
-
-
 <?= $this->section('content') ?>
 <div class="container py-4 fade-in-up">
     <div class="row">
