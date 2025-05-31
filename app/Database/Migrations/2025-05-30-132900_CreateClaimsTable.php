@@ -44,6 +44,7 @@ class CreateClaimsTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
+        $this->forge->addKey('ip_address');
         $this->forge->addForeignKey('user_id', 'users', 'id');
 
         $this->forge->createTable('claims');

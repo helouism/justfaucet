@@ -142,8 +142,6 @@ class ClaimModel extends Model
             $patterns[] = 'Identical timing patterns detected';
         }
 
-        // Pattern 4: Same browser fingerprint (if available)
-        // This would require storing browser fingerprint data
 
         return $patterns;
     }
