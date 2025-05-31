@@ -55,6 +55,7 @@ class Admin extends BaseController
             $userEntity = $userProvider->findById($userData['id']);
             $userData['is_banned'] = $userEntity ? $userEntity->isBanned() : false;
             $userData['is_active'] = $userEntity ? $userEntity->isActivated() : false;
+            $userData['ban_reason'] = $userEntity ? $userEntity->getBanMessage() : "-";
 
             // If using getAllUsersWithGroups(), you can also display the groups:
             // $userData['user_groups'] = $userData['groups'] ?? 'No groups';

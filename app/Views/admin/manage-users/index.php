@@ -35,6 +35,7 @@
                         <th>Username</th>
                         <th>Email Activated</th>
                         <th>Status</th>
+                        <th>Ban Reason</th>
                         <th>Registered At</th>
                         <th>Last Active</th>
                         <th>Level</th>
@@ -61,6 +62,7 @@
                                     <span class="badge bg-success">Not Banned</span>
                                 <?php endif; ?>
                             </td>
+                            <td><?= esc($user['ban_reason']) ?></td>
                             <td><?= esc($user['created_at']) ?></td>
                             <td><?= esc($user['last_active']) ?></td>
                             <td><?= esc($user['level']) ?></td>

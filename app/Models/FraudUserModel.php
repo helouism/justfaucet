@@ -86,7 +86,7 @@ class FraudUserModel extends Model
             // Get the current user and ban them
             $user = auth()->user();
             if ($user) {
-                $user->ban($latestFraud['abuse_type']);
+                $user->ban('You are banned. Reason : ' . $latestFraud['abuse_type']);
             }
             return true;
         }

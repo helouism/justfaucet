@@ -25,6 +25,20 @@ class CreateFraudUsersTable extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 255,
             ],
+            'ip_address' => [
+                'type' => 'VARCHAR',
+                'constraint' => 45,
+            ],
+            'detection_method' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true
+            ],
+            'severity_level' => [
+                'type' => 'ENUM',
+                'constraint' => ['low', 'medium', 'high', 'critical'],
+                'DEFAULT' => 'low',
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
