@@ -41,7 +41,7 @@
                             </div>
                         <?php else: ?>
                             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                                <a href="<?= url_to('register') . (isset($referred_by) ? "?ref={$referred_by}" : '') ?>"
+                                <a href="<?= base_url('register') . (isset($referred_by) ? "?ref={$referred_by}" : '') ?>"
                                     class="btn btn-primary btn-lg px-4 me-md-2">Get Started</a>
                                 <a href="/login" class="btn btn-success btn-lg px-4">Login</a>
                             </div>

@@ -36,7 +36,7 @@
                 </div>
             <?php else: ?>
                 <a href="/login" class="btn btn-outline-primary me-2">Login</a>
-                <a href="<?= url_to('register') . (isset($referred_by) ? "?ref={$referred_by}" : '') ?>"
+                <a href="<?= base_url('register') . (isset($referred_by) ? "?ref={$referred_by}" : '') ?>"
                     class="btn btn-primary">Register</a>
             <?php endif; ?>
         </div>
