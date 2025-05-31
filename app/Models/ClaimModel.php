@@ -84,6 +84,265 @@ class ClaimModel extends Model
     }
 
     /**
+     * Enhanced multiple account detection
+     * Checks various patterns to detect multi-accounting
+     */
+    public function checkMultipleAccounts(int $userId, string $ipAddress): array
+    {
+        // 1. Check network-based claims (existing functionality)
+        if (!$this->canIpAddressNetworkClaimFaucet($ipAddress)) {
+            return [
+                'allowed' => false,
+                'reason' => 'Network cooldown active'
+            ];
+        }
+
+        // 2. Check for suspicious patterns
+        $suspiciousPatterns = $this->detectSuspiciousPatterns($userId, $ipAddress);
+        if (!empty($suspiciousPatterns)) {
+            return [
+                'allowed' => false,
+                'reason' => 'Suspicious activity detected: ' . implode(', ', $suspiciousPatterns)
+            ];
+        }
+
+        // 3. Check account age and claim frequency
+        $accountRisk = $this->assessAccountRisk($userId, $ipAddress);
+        if ($accountRisk['risk_level'] === 'high') {
+            return [
+                'allowed' => false,
+                'reason' => 'High risk account behavior: ' . $accountRisk['reason']
+            ];
+        }
+
+        return ['allowed' => true, 'reason' => 'All checks passed'];
+    }
+
+    /**
+     * Detect suspicious patterns that might indicate multi-accounting
+     */
+    private function detectSuspiciousPatterns(int $userId, string $ipAddress): array
+    {
+        $patterns = [];
+
+        // Pattern 1: Too many different users from same network in short time
+        $networkUsers = $this->getNetworkUsersInTimeframe($ipAddress, 3600); // 1 hour
+        if (count($networkUsers) > 3) { // More than 3 different users in 1 hour
+            $patterns[] = 'Multiple users from same network';
+        }
+
+        // Pattern 2: Sequential user IDs from same network (possible mass registration)
+        $recentNetworkUsers = $this->getNetworkUsersInTimeframe($ipAddress, 86400); // 24 hours
+        if ($this->hasSequentialUserIds($recentNetworkUsers)) {
+            $patterns[] = 'Sequential account creation detected';
+        }
+
+        // Pattern 3: Identical claim timing patterns
+        if ($this->hasIdenticalTimingPatterns($userId, $ipAddress)) {
+            $patterns[] = 'Identical timing patterns detected';
+        }
+
+        // Pattern 4: Same browser fingerprint (if available)
+        // This would require storing browser fingerprint data
+
+        return $patterns;
+    }
+
+    /**
+     * Get all users who claimed from the same network in a timeframe
+     */
+    private function getNetworkUsersInTimeframe(string $ipAddress, int $seconds): array
+    {
+        $networkRange = $this->getNetworkRange($ipAddress);
+
+        $builder = $this->db->table($this->table);
+        $builder->select('user_id, ip_address, created_at');
+        $builder->distinct();
+
+        if ($networkRange['type'] === 'ipv4') {
+            $builder->where("INET_ATON(ip_address) >= {$networkRange['start']}");
+            $builder->where("INET_ATON(ip_address) <= {$networkRange['end']}");
+        } else {
+            $builder->like('ip_address', $networkRange['prefix'], 'after');
+        }
+
+        $builder->where('created_at >=', date('Y-m-d H:i:s', time() - $seconds));
+        $builder->orderBy('created_at', 'DESC');
+
+        return $builder->get()->getResultArray();
+    }
+
+    /**
+     * Check if user IDs are sequential (indicating mass registration)
+     */
+    private function hasSequentialUserIds(array $users): bool
+    {
+        if (count($users) < 3)
+            return false;
+
+        $userIds = array_column($users, 'user_id');
+        sort($userIds);
+
+        $sequential = 0;
+        for ($i = 1; $i < count($userIds); $i++) {
+            if ($userIds[$i] - $userIds[$i - 1] === 1) {
+                $sequential++;
+            }
+        }
+
+        // If more than 50% of users have sequential IDs, it's suspicious
+        return ($sequential / (count($userIds) - 1)) > 0.5;
+    }
+
+    /**
+     * Check for identical timing patterns between accounts
+     */
+    private function hasIdenticalTimingPatterns(int $userId, string $ipAddress): bool
+    {
+        // Get recent claim times for current user
+        $userClaims = $this->getUserRecentClaims($userId, 10);
+        if (count($userClaims) < 3)
+            return false;
+
+        // Get recent claims from same network by other users
+        $networkUsers = $this->getNetworkUsersInTimeframe($ipAddress, 86400);
+
+        foreach ($networkUsers as $networkUser) {
+            if ($networkUser['user_id'] == $userId)
+                continue;
+
+            $otherUserClaims = $this->getUserRecentClaims($networkUser['user_id'], 10);
+            if (count($otherUserClaims) < 3)
+                continue;
+
+            // Check if timing patterns are too similar
+            if ($this->calculateTimingSimilarity($userClaims, $otherUserClaims) > 0.8) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get recent claims for a user
+     */
+    private function getUserRecentClaims(int $userId, int $limit): array
+    {
+        $builder = $this->db->table($this->table);
+        $builder->select('created_at');
+        $builder->where('user_id', $userId);
+        $builder->orderBy('created_at', 'DESC');
+        $builder->limit($limit);
+
+        return $builder->get()->getResultArray();
+    }
+
+    /**
+     * Calculate similarity between two sets of claim times
+     */
+    private function calculateTimingSimilarity(array $claims1, array $claims2): float
+    {
+        if (count($claims1) < 2 || count($claims2) < 2)
+            return 0;
+
+        // Calculate intervals between claims
+        $intervals1 = $this->calculateIntervals($claims1);
+        $intervals2 = $this->calculateIntervals($claims2);
+
+        if (empty($intervals1) || empty($intervals2))
+            return 0;
+
+        // Compare intervals - simplified similarity calculation
+        $minCount = min(count($intervals1), count($intervals2));
+        $matches = 0;
+
+        for ($i = 0; $i < $minCount; $i++) {
+            $diff = abs($intervals1[$i] - $intervals2[$i]);
+            if ($diff < 60) { // Within 1 minute
+                $matches++;
+            }
+        }
+
+        return $matches / $minCount;
+    }
+
+    /**
+     * Calculate intervals between claims
+     */
+    private function calculateIntervals(array $claims): array
+    {
+        if (count($claims) < 2)
+            return [];
+
+        $intervals = [];
+        for ($i = 1; $i < count($claims); $i++) {
+            $time1 = strtotime($claims[$i - 1]['created_at']);
+            $time2 = strtotime($claims[$i]['created_at']);
+            $intervals[] = abs($time1 - $time2);
+        }
+
+        return $intervals;
+    }
+
+    /**
+     * Assess account risk level
+     */
+    private function assessAccountRisk(int $userId, string $ipAddress): array
+    {
+        $riskFactors = [];
+
+        // Check account age vs claim frequency
+        $userModel = new \App\Models\UserModel();
+        $userData = $userModel->find($userId);
+
+        if ($userData) {
+            $accountAge = time() - strtotime($userData->created_at);
+            $totalClaims = $this->getTotalClaimsCount($userId);
+
+            // Very new account with many claims
+            if ($accountAge < 3600 && $totalClaims > 5) { // Less than 1 hour old, more than 5 claims
+                $riskFactors[] = 'New account with high activity';
+            }
+
+            // Unrealistic claim frequency
+            if ($accountAge > 0) {
+                $claimsPerHour = ($totalClaims * 3600) / $accountAge;
+                if ($claimsPerHour > 10) { // More than 10 claims per hour on average
+                    $riskFactors[] = 'Unrealistic claim frequency';
+                }
+            }
+        }
+
+        // Check IP reputation
+        $ipClaims = $this->getIpClaimsInTimeframe($ipAddress, 86400); // 24 hours
+        if (count($ipClaims) > 50) { // More than 50 claims from this IP in 24 hours
+            $riskFactors[] = 'High IP activity';
+        }
+
+        $riskLevel = count($riskFactors) > 0 ? 'high' : 'low';
+
+        return [
+            'risk_level' => $riskLevel,
+            'reason' => implode(', ', $riskFactors),
+            'factors' => $riskFactors
+        ];
+    }
+
+    /**
+     * Get all claims from an IP in a timeframe
+     */
+    private function getIpClaimsInTimeframe(string $ipAddress, int $seconds): array
+    {
+        $builder = $this->db->table($this->table);
+        $builder->select('user_id, created_at');
+        $builder->where('ip_address', $ipAddress);
+        $builder->where('created_at >=', date('Y-m-d H:i:s', time() - $seconds));
+
+        return $builder->get()->getResultArray();
+    }
+
+    /**
      * Get the next claim time for a user (moved from controller)
      *
      * @param int $userId The user ID
@@ -207,7 +466,6 @@ class ClaimModel extends Model
         return ($currentTime - $lastClaimed) >= 300;
     }
 
-
     /**
      * Get the number of claims made by a user in the current UTC day.
      *
@@ -229,9 +487,6 @@ class ClaimModel extends Model
         $row = $query->getRow();
         return $row ? (int) $row->total_claims : 0;
     }
-
-
-
 
     /**
      * Get the network range for an IP address.
@@ -275,6 +530,4 @@ class ClaimModel extends Model
             'ip' => $ipAddress
         ];
     }
-
-
 }

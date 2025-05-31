@@ -4,10 +4,11 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateWithdrawalsTable extends Migration
+class CreateFraudUsersTable extends Migration
 {
     public function up()
     {
+        //
         $this->forge->addField([
             'id' => [
                 'type' => 'INT',
@@ -20,18 +21,9 @@ class CreateWithdrawalsTable extends Migration
                 'constraint' => 11,
                 'unsigned' => true,
             ],
-            'amount' => [
-                'type' => 'DECIMAL',
-                'constraint' => '10,3',
-            ],
-            'status' => [
-                'type' => 'ENUM',
-                'constraint' => ['paid', 'failed'],
-            ],
-            'faucetpay_payout_id' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'null' => true,
+            'abuse_type' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -46,16 +38,14 @@ class CreateWithdrawalsTable extends Migration
                 'null' => true,
             ],
         ]);
-
         $this->forge->addKey('id', true);
-        $this->forge->addUniqueKey('faucetpay_payout_id');
         $this->forge->addForeignKey('user_id', 'users', 'id');
-
-        $this->forge->createTable('withdrawals');
+        $this->forge->createTable('fraud_users');
     }
 
     public function down()
     {
-        $this->forge->dropTable('withdrawals');
+        //
+        $this->forge->dropTable('fraud_users');
     }
 }

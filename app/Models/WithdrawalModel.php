@@ -21,7 +21,7 @@ class WithdrawalModel extends Model
     protected array $castHandlers = [];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat = 'datetime';
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
@@ -67,6 +67,7 @@ class WithdrawalModel extends Model
 
         return $query->getResultArray(); // Return all withdrawals as an array
     }
+
 
 
 

@@ -1,5 +1,6 @@
 <?= $this->extend('layout/page_layout') ?>
 <?= $this->section('content') ?>
+
 <div class="content-card fade-in-up">
     <div class="welcome-section">
         <h1 class="welcome-title">Claim Points Every 5 Minutes</h1>
@@ -36,6 +37,8 @@
         </div>
     </div>
 </div>
+
+
 
 <!-- jQuery -->
 <script src="<?= base_url("/js/jquery/jquery.min.js") ?>"></script>

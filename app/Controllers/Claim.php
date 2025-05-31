@@ -4,44 +4,69 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 use App\Models\ClaimModel;
-use CodeIgniter\Database\BaseConnection;
-
+use App\Models\FraudUserModel;
 
 class Claim extends BaseController
 {
-    protected BaseConnection $db;
     protected $userModel;
     protected $claimModel;
+    protected $fraudUserModel;
 
     public function __construct()
     {
-        $this->db = \Config\Database::connect();
         $this->userModel = new UserModel();
         $this->claimModel = new ClaimModel();
+        $this->fraudUserModel = new FraudUserModel();
     }
 
     public function index(): string
     {
-        $data = ['title' => 'Claim'];
+
+
+        $data = [
+            'title' => 'Claim',
+
+        ];
         return view('user/claim/index', $data);
     }
-
-    // STORE CLAIM ACTION -
+    // STORE CLAIM ACTION
     public function store()
     {
         $this->response->setHeader('Content-Type', 'application/json');
 
-
         $user_id = auth()->id();
         $ipAddress = $this->request->getIPAddress();
 
+        // Check if user can claim (5-minute cooldown)
         if (!$this->claimModel->canUserIdClaimFaucet($user_id)) {
+            $this->logFraudAttempt($user_id, 'Use scripts', $ipAddress);
             return $this->response->setJSON([
                 'error' => 'Please wait 5 minutes between claims.'
             ]);
-        } else if (!$this->claimModel->canIpAddressNetworkClaimFaucet($ipAddress)) {
+        }
+
+        // Check for VPN/Proxy/Tor usage
+        $vpnCheckResult = $this->checkVpnProxy($ipAddress);
+        if ($vpnCheckResult['isVpn']) {
+            $this->logFraudAttempt($user_id, 'Using VPN/Proxy/Tor', $ipAddress, $vpnCheckResult['provider']);
+            return $this->response->setJSON([
+                'error' => 'VPN/Proxy/Tor usage is not allowed.'
+            ]);
+        }
+
+        // Enhanced multiple account detection
+        $multiAccountCheck = $this->claimModel->checkMultipleAccounts($user_id, $ipAddress);
+        if (!$multiAccountCheck['allowed']) {
+            $this->logFraudAttempt($user_id, 'Using multiple accounts', $ipAddress, $multiAccountCheck['reason']);
             return $this->response->setJSON([
                 'error' => 'Multiple accounts on the same network is not allowed.'
+            ]);
+        }
+
+        // Check if user is already marked as fraud
+        if ($this->fraudUserModel->isUserFraud($user_id)) {
+            return $this->response->setJSON([
+                'error' => 'Account flagged for suspicious activity. Contact support.'
             ]);
         }
 
@@ -55,8 +80,6 @@ class Claim extends BaseController
             'claim_amount' => $claimAmount,
             'ip_address' => $ipAddress
         ];
-
-        $this->db->transStart();
 
         // Insert claim record
         $this->claimModel->insert($claimData);
@@ -74,14 +97,6 @@ class Claim extends BaseController
 
         // Check if user was referred and add bonus to referrer
         $this->userModel->applyReferralBonus($user_id, $claimAmount);
-
-        $this->db->transComplete();
-
-        if ($this->db->transStatus() === false) {
-            return $this->response->setJSON([
-                'error' => 'Transaction failed'
-            ]);
-        }
 
         // Get updated balance
         $newBalance = $this->userModel->getBalance($user_id);
@@ -114,9 +129,11 @@ class Claim extends BaseController
         $exp = (int) $userData->exp;
         $level = (int) $userData->level;
 
-        if ($this->claimModel->canUserIdClaimFaucet($user_id) && $this->claimModel->canIpAddressNetworkClaimFaucet($ipAddress)) {
+        // Check if user is flagged as fraud
+        if ($this->fraudUserModel->isUserFraud($user_id)) {
             return $this->response->setJSON([
-                'canClaim' => true,
+                'canClaim' => false,
+                'error' => 'Account flagged for suspicious activity. Contact support.',
                 'balance' => $this->userModel->getBalance($user_id),
                 'exp' => $exp,
                 'level' => $level,
@@ -124,11 +141,37 @@ class Claim extends BaseController
             ]);
         }
 
-        // Use model method instead of direct query builder
+        if ($this->claimModel->canUserIdClaimFaucet($user_id)) {
+            // Check VPN/Proxy before allowing claim
+            $vpnCheckResult = $this->checkVpnProxy($ipAddress);
+            if ($vpnCheckResult['isVpn']) {
+                return $this->response->setJSON([
+                    'canClaim' => false,
+                    'error' => 'VPN/Proxy/Tor usage is not allowed.',
+                    'balance' => $this->userModel->getBalance($user_id),
+                    'exp' => $exp,
+                    'level' => $level,
+                    'nextLevelExp' => ($level + 1) * 100
+                ]);
+            }
+
+            // Check multiple accounts
+            $multiAccountCheck = $this->claimModel->checkMultipleAccounts($user_id, $ipAddress);
+            if ($multiAccountCheck['allowed']) {
+                return $this->response->setJSON([
+                    'canClaim' => true,
+                    'balance' => $this->userModel->getBalance($user_id),
+                    'exp' => $exp,
+                    'level' => $level,
+                    'nextLevelExp' => ($level + 1) * 100
+                ]);
+            }
+        }
+
+        // Get next claim time
         $nextClaimTime = $this->claimModel->getNextClaimTime($user_id);
 
         if ($nextClaimTime === null) {
-            // If no claims found, user can claim immediately
             return $this->response->setJSON([
                 'canClaim' => true,
                 'balance' => $this->userModel->getBalance($user_id),
@@ -148,6 +191,148 @@ class Claim extends BaseController
         ]);
     }
 
+    /**
+     * Check if IP address is using VPN/Proxy/Tor
+     */
+    private function checkVpnProxy(string $ipAddress): array
+    {
+        // Skip local/private IP addresses
+        if ($this->isPrivateIP($ipAddress)) {
+            return ['isVpn' => false, 'provider' => null];
+        }
 
+        // Try VPNApi first
+        $vpnApiResult = $this->checkVpnApi($ipAddress);
+        if ($vpnApiResult['isVpn']) {
+            return $vpnApiResult;
+        }
 
+        // Try IPHub as fallback
+        $ipHubResult = $this->checkIpHub($ipAddress);
+        return $ipHubResult;
+    }
+
+    /**
+     * Check VPN/Proxy using VPNApi.io
+     */
+    private function checkVpnApi(string $ipAddress): array
+    {
+        try {
+            $apiKey = env('VPNAPI_KEY'); // Set in .env file
+            if (empty($apiKey)) {
+                return ['isVpn' => false, 'provider' => null];
+            }
+
+            $url = "https://vpnapi.io/api/{$ipAddress}?key={$apiKey}";
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($httpCode === 200 && !empty($response)) {
+                $data = json_decode($response, true);
+
+                if (isset($data['security'])) {
+                    $security = $data['security'];
+                    $isVpn = $security['vpn'] || $security['proxy'] || $security['tor'];
+
+                    return [
+                        'isVpn' => $isVpn,
+                        'provider' => $isVpn ? 'VPNApi' : null,
+                        'details' => $security
+                    ];
+                }
+            }
+        } catch (Exception $e) {
+            log_message('error', 'VPNApi check failed: ' . $e->getMessage());
+        }
+
+        return ['isVpn' => false, 'provider' => null];
+    }
+
+    /**
+     * Check VPN/Proxy using IPHub
+     */
+    private function checkIpHub(string $ipAddress): array
+    {
+        try {
+            $apiKey = env('IPHUB_KEY'); // Set in .env file
+            if (empty($apiKey)) {
+                return ['isVpn' => false, 'provider' => null];
+            }
+
+            $url = "http://v2.api.iphub.info/ip/{$ipAddress}";
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                "X-Key: {$apiKey}"
+            ]);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($httpCode === 200 && !empty($response)) {
+                $data = json_decode($response, true);
+
+                if (isset($data['block'])) {
+                    // IPHub returns 0 for good IPs, 1 for bad/proxy IPs, 2 for unknown
+                    $isVpn = $data['block'] == 1;
+
+                    return [
+                        'isVpn' => $isVpn,
+                        'provider' => $isVpn ? 'IPHub' : null,
+                        'details' => $data
+                    ];
+                }
+            }
+        } catch (Exception $e) {
+            log_message('error', 'IPHub check failed: ' . $e->getMessage());
+        }
+
+        return ['isVpn' => false, 'provider' => null];
+    }
+
+    /**
+     * Check if IP address is private/local
+     */
+    private function isPrivateIP(string $ipAddress): bool
+    {
+        return !filter_var(
+            $ipAddress,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+        );
+    }
+
+    /**
+     * Log fraud attempt with additional details
+     */
+    private function logFraudAttempt(int $userId, string $abuseType, string $ipAddress, string $provider = null): void
+    {
+        $fraudData = [
+            'user_id' => $userId,
+            'abuse_type' => $abuseType,
+            'ip_address' => $ipAddress,
+            'detection_method' => $provider,
+            'user_agent' => $this->request->getUserAgent(),
+            'additional_data' => json_encode([
+                'timestamp' => time(),
+                'headers' => $this->request->getHeaders()
+            ])
+        ];
+
+        $this->fraudUserModel->insert($fraudData);
+    }
 }

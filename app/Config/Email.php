@@ -62,7 +62,7 @@ class Email extends BaseConfig
      *             to the server. 'ssl' means implicit SSL. Connection on port
      *             465 should set this to ''.
      */
-    public string $SMTPCrypto = 'ssl';
+    public string $SMTPCrypto = '';
 
     /**
      * Enable word-wrap

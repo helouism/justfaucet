@@ -32,4 +32,6 @@ class Dashboard extends BaseController
 
         return view('user/dashboard/index', $data);
     }
+
+
 }

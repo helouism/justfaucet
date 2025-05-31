@@ -30,7 +30,7 @@
             <div class="stat-card mb-4">
                 <i class="fas fa-coins stat-icon"></i>
                 <div class="stat-label">Total Earned</div>
-                <div class="stat-number"><?= number_format($total_earned, 2) ?><small>points</small></div>
+                <div class="stat-number"><?= number_format($total_earned, 2) ?><small> points</small></div>
             </div>
         </div>
         <div class="col-md-4">
