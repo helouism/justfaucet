@@ -27,7 +27,7 @@ class CreateFraudUsersTable extends Migration
             ],
             'ip_address' => [
                 'type' => 'VARCHAR',
-                'constraint' => 45,
+                'constraint' => 255,
             ],
             'detection_method' => [
                 'type' => 'VARCHAR',
@@ -53,6 +53,10 @@ class CreateFraudUsersTable extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
+        $this->forge->addKey('ip_address');
+        $this->forge->addKey('severity_level');
+        $this->forge->addKey('created_at');
+        $this->forge->addKey('abuse_type');
         $this->forge->addForeignKey('user_id', 'users', 'id');
         $this->forge->createTable('fraud_users');
     }
