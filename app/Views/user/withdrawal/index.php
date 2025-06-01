@@ -63,7 +63,7 @@
 </div>
 <script src="<?= base_url("/js/jquery/jquery.min.js") ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
+<script {csp-script-nonce}>
     $(document).ready(function () {
         // Handle withdrawal request form submission
         $('form').on('submit', function (e) {

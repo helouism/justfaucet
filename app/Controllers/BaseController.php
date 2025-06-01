@@ -54,5 +54,30 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = service('session');
+        $csp = $this->response->getCSP();
+        $csp->setDefaultSrc('self');
+
+        $csp->addFontSrc('https://fonts.gstatic.com');
+        $csp->addFontSrc('https://cdnjs.cloudflare.com');
+        $csp->addStyleSrc('https://fonts.googleapis.com');
+        $csp->addStyleSrc('https://cdn.jsdelivr.net');
+
+        $csp->addStyleSrc('https://cdnjs.cloudflare.com');
+        $csp->addStyleSrc('https://cdn.datatables.net');
+        $csp->addStyleSrc('https://hcaptcha.com');
+        $csp->addStyleSrc('https://*.hcaptcha.com');
+        $csp->addScriptSrc('https://cdn.datatables.net');
+        $csp->addScriptSrc('https://hcaptcha.com');
+        $csp->addScriptSrc('https://*.hcaptcha.com');
+        $csp->addConnectSrc('https://hcaptcha.com');
+        $csp->addConnectSrc('https://*.hcaptcha.com');
+        $csp->addScriptSrc('https://cdnjs.cloudflare.com');
+        $csp->addScriptSrc('https://cdn.jsdelivr.net');
+
+        $csp->addFrameSrc('https://hcaptcha.com');
+        $csp->addFrameSrc('https://*.hcaptcha.com');
+
+
+
     }
 }

@@ -11,8 +11,8 @@
             </div>
         </div>
 
-        <!-- IconCaptcha Container -->
-        <div id="captcha-container" class="mb-3" style="display: none;">
+        <!-- hCaptcha Container -->
+        <div id="captcha-container" class="mb-3">
             <div class="text-center mb-2">
                 <label class="form-label">Complete the captcha to enable claim:</label>
             </div>
@@ -24,8 +24,7 @@
 
         <button type="button" class="btn btn-primary btn-lg" id="claimButton" disabled>
             <span id="button-text">Solve Captcha First</span>
-            <span id="button-spinner" class="spinner-border spinner-border-sm ms-2" role="status"
-                style="display: none;">
+            <span id="button-spinner" class="spinner-border spinner-border-sm ms-2" role="status">
                 <span class="visually-hidden">Loading...</span>
             </span>
         </button>
@@ -41,11 +40,11 @@
 <!-- jQuery -->
 <script src="<?= base_url("/js/jquery/jquery.min.js") ?>"></script>
 
-<!-- IconCaptcha JS and CSS -->
+<!-- Hcaptcha  -->
 <script src="https://js.hcaptcha.com/1/api.js?hl=en" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
+<script {csp-script-nonce}>
     $(document).ready(function () {
         let countdown;
         let captchaCompleted = false;

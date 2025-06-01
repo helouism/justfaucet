@@ -92,7 +92,7 @@
 <script src="<?= base_url("/js/jquery/jquery.min.js") ?>"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-<script>
+<script {csp-script-nonce}>
     $(document).ready(function () {
         $('#usersTable').DataTable({
             "order": [[0, "desc"]],

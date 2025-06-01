@@ -29,7 +29,9 @@ class Claim extends BaseController
         ];
         return view('user/claim/index', $data);
     }
-    // STORE CLAIM ACTION
+
+    // CLAIM ACTION
+
     public function store()
     {
         $this->response->setHeader('Content-Type', 'application/json');
@@ -343,6 +345,8 @@ class Claim extends BaseController
 
         $this->fraudUserModel->insert($fraudData);
     }
+
+    // Verify with hCaptcha 
     private function verifyHCaptcha($response)
     {
         if (empty($response)) {
