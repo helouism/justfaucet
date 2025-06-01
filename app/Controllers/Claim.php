@@ -34,6 +34,14 @@ class Claim extends BaseController
     {
         $this->response->setHeader('Content-Type', 'application/json');
 
+        // Verify hCaptcha first
+        $hcaptchaResponse = $this->request->getPost('h-captcha-response');
+        if (!$this->verifyHCaptcha($hcaptchaResponse)) {
+            return $this->response->setJSON([
+                'error' => 'Invalid captcha response. Please try again.'
+            ]);
+        }
+
         $user_id = auth()->id();
         $ipAddress = $this->request->getIPAddress();
 
@@ -334,5 +342,36 @@ class Claim extends BaseController
         ];
 
         $this->fraudUserModel->insert($fraudData);
+    }
+    private function verifyHCaptcha($response)
+    {
+        if (empty($response)) {
+            return false;
+        }
+
+        try {
+            $secret = env('HCAPTCHA_SECRET_KEY');
+            $data = [
+                'secret' => $secret,
+                'response' => $response
+            ];
+
+            $verify = curl_init();
+            curl_setopt($verify, CURLOPT_URL, "https://hcaptcha.com/siteverify");
+            curl_setopt($verify, CURLOPT_POST, true);
+            curl_setopt($verify, CURLOPT_POSTFIELDS, http_build_query($data));
+            curl_setopt($verify, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($verify, CURLOPT_SSL_VERIFYPEER, false);
+
+            $response = curl_exec($verify);
+            curl_close($verify);
+
+            $responseData = json_decode($response);
+            log_message('debug', $response);
+            return $responseData->success;
+        } catch (Exception $e) {
+            log_message('error', 'hCaptcha verification failed: ' . $e->getMessage());
+            return false;
+        }
     }
 }

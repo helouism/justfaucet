@@ -17,10 +17,8 @@
                 <label class="form-label">Complete the captcha to enable claim:</label>
             </div>
             <div class="d-flex justify-content-center">
-                <div class="iconcaptcha-widget" data-theme="light">
-
-                </div>
-                <?php echo \IconCaptcha\Token\IconCaptchaToken::render(); ?>
+                <div class="h-captcha" data-sitekey="<?= env('HCAPTCHA_SITE_KEY') ?>" data-callback="hcaptchaCallback"
+                    data-expired-callback="hcaptchaExpiredCallback"></div>
             </div>
         </div>
 
@@ -44,71 +42,18 @@
 <script src="<?= base_url("/js/jquery/jquery.min.js") ?>"></script>
 
 <!-- IconCaptcha JS and CSS -->
-<link rel="stylesheet" href="<?= base_url('assets/iconcaptcha/client/css/iconcaptcha.min.css') ?>">
-<script src="<?= base_url('assets/iconcaptcha/client/js/iconcaptcha.min.js') ?>"></script>
-
+<script src="https://js.hcaptcha.com/1/api.js?hl=en" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>$(document).ready(function () {
+<script>
+    $(document).ready(function () {
         let countdown;
         let captchaCompleted = false;
         let canClaimNow = false;
-        let iconCaptcha;
-
-        function initializeCaptcha() {
-            // Clear any existing captcha first
-            $('.iconcaptcha-widget').empty();
-
-            iconCaptcha = $('.iconcaptcha-widget').iconCaptcha({
-                general: {
-                    endpoint: '/captcha-request',
-                    fontFamily: 'inherit',
-                    showCredits: true,
-                },
-                security: {
-                    interactionDelay: 1500,
-                    hoverProtection: true,
-                    displayInitialMessage: true,
-                    initializationDelay: 500,
-                    incorrectSelectionResetDelay: 3000,
-                    loadingAnimationDuration: 1000,
-                },
-                locale: {
-                    initialization: {
-                        verify: 'Verify that you are human.',
-                        loading: 'Loading challenge...',
-                    },
-                    header: 'Select the image displayed the <u>least</u> amount of times',
-                    correct: 'Verification complete.',
-                    incorrect: {
-                        title: 'Uh oh.',
-                        subtitle: "You've selected the wrong image.",
-                    },
-                    timeout: {
-                        title: 'Please wait.',
-                        subtitle: 'You made too many incorrect selections.'
-                    }
-                }
-            });
-
-            // Use the working event listener (no namespace version)
-            $('.iconcaptcha-widget').on('success', function () {
-
-                captchaCompleted = true;
-                updateButtonState();
-            });
-
-            $('.iconcaptcha-widget').on('error', function () {
-
-                captchaCompleted = false;
-                updateButtonState();
-            });
-        }
 
         function updateButtonState() {
             const $btn = $('#claimButton');
             const $btnText = $('#button-text');
-
 
             if (!canClaimNow) {
                 $btn.prop('disabled', true);
@@ -124,14 +69,13 @@
 
         function showCaptcha() {
             $('#captcha-container').slideDown();
-            // Don't reset captcha state when showing - only when initializing
-            initializeCaptcha();
             updateButtonState();
         }
 
         function hideCaptcha() {
             $('#captcha-container').slideUp();
             captchaCompleted = false;
+            hcaptcha.reset();
             updateButtonState();
         }
 
@@ -168,18 +112,27 @@
         function checkClaimStatus() {
             $.get('<?= site_url('claim/status') ?>', function (response) {
                 if (response.canClaim) {
-                    // User can claim immediately - show captcha right away
                     $('#timer').text('Ready to claim!');
                     canClaimNow = true;
                     showCaptcha();
                 } else {
-                    // User must wait - start countdown timer
                     updateTimer(response.nextClaimTime);
                 }
             }).fail(function () {
                 $('#timer').text('Error loading claim status');
             });
         }
+
+        // hCaptcha callback functions
+        window.hcaptchaCallback = function () {
+            captchaCompleted = true;
+            updateButtonState();
+        };
+
+        window.hcaptchaExpiredCallback = function () {
+            captchaCompleted = false;
+            updateButtonState();
+        };
 
         $('#claimButton').click(function () {
             if (!captchaCompleted || !canClaimNow) {
@@ -190,29 +143,27 @@
             const $btnText = $('#button-text');
             const $spinner = $('#button-spinner');
 
-
-
             $btn.prop('disabled', true);
             $btnText.text('Processing...');
             $spinner.show();
+
+            const hcaptchaResponse = hcaptcha.getResponse();
 
             $.ajax({
                 url: '<?= site_url('claim/action') ?>',
                 method: 'POST',
                 data: {
                     '<?= csrf_token() ?>': '<?= csrf_hash() ?>',
-
+                    'h-captcha-response': hcaptchaResponse
                 },
                 success: function (response) {
                     $spinner.hide();
 
                     if (response.success) {
-                        // Reset captcha state after successful claim
                         captchaCompleted = false;
                         canClaimNow = false;
                         hideCaptcha();
 
-                        // Start the countdown for next claim
                         updateTimer(response.nextClaimTime);
 
                         Swal.fire({
@@ -231,7 +182,6 @@
                             timer: 4000
                         });
 
-                        // Show level up notification if applicable
                         if (response.levelUp) {
                             setTimeout(() => {
                                 Swal.fire({
@@ -243,12 +193,9 @@
                             }, 1000);
                         }
                     } else {
-                        // Reset captcha on error
                         captchaCompleted = false;
+                        hcaptcha.reset();
                         updateButtonState();
-
-                        // Re-initialize captcha for retry
-                        initializeCaptcha();
 
                         Swal.fire({
                             icon: 'error',
@@ -263,13 +210,9 @@
                 },
                 error: function (xhr) {
                     $spinner.hide();
-
-                    // Reset captcha on error
                     captchaCompleted = false;
+                    hcaptcha.reset();
                     updateButtonState();
-
-                    // Re-initialize captcha for retry
-                    initializeCaptcha();
 
                     Swal.fire({
                         icon: 'error',
