@@ -21,7 +21,11 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="<?= base_url('/css/index.css') ?>">
-
+    <script>
+        // Immediately set theme before page loads
+        const savedTheme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+    </script>
     <?php if ($title === 'Referral' || $title === 'Manage Users' || $title === 'Manage Withdrawals'): ?>
 
         <!-- DataTables CSS -->
