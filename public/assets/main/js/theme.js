@@ -20,6 +20,8 @@ function updateThemeIcon(theme) {
     icon.className = theme === "dark" ? "fas fa-sun" : "fas fa-moon";
   }
 }
-
+document
+  .getElementById("themeToggleBtn")
+  .addEventListener("click", toggleTheme);
 // Initialize theme on page load
 document.addEventListener("DOMContentLoaded", initTheme);

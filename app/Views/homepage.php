@@ -15,7 +15,7 @@
     <!-- Google Fonts - Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?= base_url('/css/index.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/assets/main/css/index.css') ?>">
 
 
 </head>
@@ -87,11 +87,11 @@
 
 
     <!-- Bootstrap JS Bundle -->
-    <script src="<?= base_url("/js/bootstrap/bootstrap.bundle.min.js") ?>"></script>
+    <script src="<?= base_url("assets/bootstrap/js/bootstrap.bundle.min.js") ?>"></script>
 
 
     <!-- THEME TOGGLE -->
-    <script src="<?= base_url('js/theme.js') ?>"></script>
+    <script src="<?= base_url('assets/main/js/theme.js') ?>"></script>
 </body>
 
 </html>

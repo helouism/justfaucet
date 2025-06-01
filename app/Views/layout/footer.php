@@ -1,7 +1,7 @@
 <footer class="footer mx-auto">
     <div class="container-fluid">
         <!-- Theme Toggle Button -->
-        <button class="theme-toggle mx-auto" onclick="toggleTheme()">
+        <button id="themeToggleBtn" class="theme-toggle mx-auto">
             <i id="theme-icon" class="fas fa-moon"></i>
         </button>
 
@@ -10,10 +10,6 @@
             <?php
             date("H:i");
             ?>
-
-
-
-
         </p>
     </div>
 </footer>

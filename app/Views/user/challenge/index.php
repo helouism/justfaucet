@@ -37,7 +37,7 @@
     </div>
 </div>
 
-<script {csp-script-nonce}>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         const claimButtons = document.querySelectorAll('.claim-btn');
 

@@ -38,13 +38,13 @@
 
 
 <!-- jQuery -->
-<script src="<?= base_url("/js/jquery/jquery.min.js") ?>"></script>
+<script src="<?= base_url("assets/jquery/jquery.min.js") ?>"></script>
 
-<!-- Hcaptcha  -->
+<!-- Hcaptcha & sweetalert2  -->
 <script src="https://js.hcaptcha.com/1/api.js?hl=en" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script {csp-script-nonce}>
+
+<script>
     $(document).ready(function () {
         let countdown;
         let captchaCompleted = false;

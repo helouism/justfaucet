@@ -8,7 +8,7 @@
     <title>JustFaucet</title>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="<?= base_url('/css/bootstrap/bootstrap.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/assets/bootstrap/css/bootstrap.min.css') ?>">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
@@ -20,10 +20,12 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="<?= base_url('/css/index.css') ?>">
+    <!-- Sweetalert2 -->
+    <link rel="stylesheet" href="<?= base_url('/assets/sweetalert2/css/sweetalert2.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/assets/main/css/index.css') ?>">
 
 
-    <script {csp-script-nonce}>
+    <script>
         // Immediately set theme before page loads
         const savedTheme = localStorage.getItem("theme") || "light";
         document.documentElement.setAttribute("data-theme", savedTheme);
@@ -32,7 +34,7 @@
 
         <!-- DataTables CSS -->
         <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-        <link rel="stylesheet" href="<?= base_url("/css/datatables/datatables.css") ?>">
+        <link rel="stylesheet" href="<?= base_url("assets/datatables/css/datatables.css") ?>">
     <?php endif; ?>
 </head>
 
@@ -53,15 +55,15 @@
 
 
 
-    <!-- Bootstrap, Sweetalert2, jQuery  -->
-    <script src="<?= base_url("/js/bootstrap/bootstrap.bundle.min.js") ?>"></script>
-
+    <!-- Bootstrap, jQuery  -->
+    <script src="<?= base_url("assets/bootstrap/js/bootstrap.bundle.min.js") ?>"></script>
+    <script src="<?= base_url('assets/sweetalert2/js/sweetalert2.all.min.js') ?>"></script>
 
     <!-- THEME TOGGLE-->
-    <script src="<?= base_url('js/theme.js') ?>"></script>
+    <script src="<?= base_url('assets/main/js/theme.js') ?>"></script>
 
     <!-- SIDEBAR TOGGLE -->
-    <script src="<?= base_url('/js/script.js') ?>"></script>
+    <script src="<?= base_url('assets/main/js/script.js') ?>"></script>
 
 
 

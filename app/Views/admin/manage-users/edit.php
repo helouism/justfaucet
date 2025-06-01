@@ -22,9 +22,9 @@
     </div>
 
 </div>
-<script src="<?= base_url("/js/jquery/jquery.min.js") ?>"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script {csp-script-nonce}>
+<script src="<?= base_url("assets/jquery/jquery.min.js") ?>"></script>
+
+<script>
     $(document).ready(function () {
         $('form').on('submit', function (e) {
             e.preventDefault();

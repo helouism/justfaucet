@@ -46,52 +46,52 @@
         <div class="card-body">
             <h4 class="mb-4" style="color: var(--secondary-color);">Your Referrals</h4>
             <?php if (empty($referrals)): ?>
-                <div class="alert alert-info">
-                    You haven't referred anyone yet. Share your referral link to start earning!
-                </div>
+                    <div class="alert alert-info">
+                        You haven't referred anyone yet. Share your referral link to start earning!
+                    </div>
             <?php else: ?>
-                <div class="table-responsive">
-                    <table id="referralsTable" class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Registered</th>
-                                <th>Last Active</th>
-                                <th>Claims (30d)</th>
-                                <th>You earned</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($referrals as $referral): ?>
+                    <div class="table-responsive">
+                        <table id="referralsTable" class="table table-striped">
+                            <thead>
                                 <tr>
-                                    <td><?= esc($referral['username']) ?></td>
-                                    <td data-sort="<?= strtotime($referral['created_at']) ?>">
-                                        <?= date('Y-m-d', strtotime($referral['created_at'])) ?>
-                                    </td>
-                                    <td data-sort="<?= strtotime($referral['last_active']) ?>">
-                                        <?= date('Y-m-d', strtotime($referral['last_active'])) ?>
-                                    </td>
-                                    <td><?= $referral['claims_30days'] ?></td>
-                                    <td data-sort="<?= $referral['earnings'] ?>">
-                                        <?= number_format($referral['earnings'], 2) ?> points
-                                    </td>
+                                    <th>Username</th>
+                                    <th>Registered</th>
+                                    <th>Last Active</th>
+                                    <th>Claims (30d)</th>
+                                    <th>You earned</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($referrals as $referral): ?>
+                                        <tr>
+                                            <td><?= esc($referral['username']) ?></td>
+                                            <td data-sort="<?= strtotime($referral['created_at']) ?>">
+                                                <?= date('Y-m-d', strtotime($referral['created_at'])) ?>
+                                            </td>
+                                            <td data-sort="<?= strtotime($referral['last_active']) ?>">
+                                                <?= date('Y-m-d', strtotime($referral['last_active'])) ?>
+                                            </td>
+                                            <td><?= $referral['claims_30days'] ?></td>
+                                            <td data-sort="<?= $referral['earnings'] ?>">
+                                                <?= number_format($referral['earnings'], 2) ?> points
+                                            </td>
+                                        </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
             <?php endif; ?>
         </div>
     </div>
 </div>
 
 <!-- DataTables & SweetAlert, jquery Scripts -->
-<script src="<?= base_url("/js/jquery/jquery.min.js") ?>"></script>
+<script src="<?= base_url("assets/jquery/jquery.min.js") ?>"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script {csp-script-nonce}>
+
+<script >
     $(document).ready(function () {
         $('#referralsTable').DataTable({
             responsive: true,
