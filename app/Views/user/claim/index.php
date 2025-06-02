@@ -79,10 +79,40 @@
             updateButtonState();
         }
 
+        function showErrorAlert(message) {
+            // Hide timer and captcha
+            $('#timer').hide();
+            hideCaptcha();
+
+            // Show bootstrap alert
+            const alertHtml = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" id="vpn-error-alert">
+                <strong>Access Denied!</strong> ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+
+            // Remove existing alert if present
+            $('#vpn-error-alert').remove();
+
+            // Add alert before the welcome section
+            $('.welcome-section').prepend(alertHtml);
+
+            // Update button state
+            canClaimNow = false;
+            updateButtonState();
+        }
+
+        function hideErrorAlert() {
+            $('#vpn-error-alert').remove();
+            $('#timer').show();
+        }
+
         function updateTimer(nextClaimTime) {
             clearInterval(countdown);
             canClaimNow = false;
             hideCaptcha();
+            hideErrorAlert(); // Hide any existing error alerts
 
             function updateDisplay() {
                 const now = Math.floor(Date.now() / 1000);
@@ -111,15 +141,28 @@
 
         function checkClaimStatus() {
             $.get('<?= site_url('claim/status') ?>', function (response) {
+                // Check if there's an error in the response
+                if (response.error) {
+                    showErrorAlert(response.error);
+                    return;
+                }
+
                 if (response.canClaim) {
                     $('#timer').text('Ready to claim!');
                     canClaimNow = true;
                     showCaptcha();
-                } else {
+                    hideErrorAlert();
+                } else if (response.nextClaimTime) {
                     updateTimer(response.nextClaimTime);
+                } else {
+                    // Handle case where nextClaimTime is not provided
+                    $('#timer').text('Unable to determine next claim time');
+                    canClaimNow = false;
+                    updateButtonState();
                 }
             }).fail(function () {
                 $('#timer').text('Error loading claim status');
+                showErrorAlert('Unable to connect to server. Please refresh the page.');
             });
         }
 
@@ -170,12 +213,12 @@
                             icon: 'success',
                             title: 'Success!',
                             html: `
-                            <div>${response.success}</div>
-                            <div class="mt-2">
-                                <strong>New Balance:</strong> ${response.newBalance} points<br>
-                                <strong>Level:</strong> ${response.level} (${response.exp}/${response.nextLevelExp} XP)
-                            </div>
-                        `,
+                        <div>${response.success}</div>
+                        <div class="mt-2">
+                            <strong>New Balance:</strong> ${response.newBalance} points<br>
+                            <strong>Level:</strong> ${response.level} (${response.exp}/${response.nextLevelExp} XP)
+                        </div>
+                    `,
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
@@ -197,15 +240,20 @@
                         hcaptcha.reset();
                         updateButtonState();
 
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: response.error,
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 3000
-                        });
+                        // Show error as alert instead of SweetAlert for VPN/Proxy errors
+                        if (response.error && (response.error.includes('VPN') || response.error.includes('Proxy') || response.error.includes('flagged'))) {
+                            showErrorAlert(response.error);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: response.error,
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        }
                     }
                 },
                 error: function (xhr) {
