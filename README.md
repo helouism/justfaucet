@@ -23,7 +23,12 @@ php spark shield:setup
 8. Edit `App/Config/Email.php` to configure your email credentials
 10. Configure your IPHUB and VPNAPI API KEY in `.env` file
 
-
+### Features
+- Admin Dashboard
+- 5 Minutes Faucet Cooldown
+- VPN/Proxy/Tor abuse detection
+- bot detection with hCaptcha
+- Manual and auto ban(based on suspicious activity)
 
 
 ### Tech Stack
