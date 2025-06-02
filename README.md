@@ -15,13 +15,13 @@ git clone https://github.com/helouism/justfaucet.git
 composer install
 ```
 4. Rename env to .env
-5. Configure your database credentials in the '.env' file
+5. Configure your database credentials in the `.env` file
 6. Run this command to setup CodeIgniter Shield and follow the instructions
 ```console
 php spark shield:setup
 ```
-8. Edit 'App/Config/Email.php' to setup your email
-10. Configure your IPHUB and VPNAPI API KEY in '.env' file
+8. Edit `App/Config/Email.php` to configure your email credentials
+10. Configure your IPHUB and VPNAPI API KEY in `.env` file
 
 
 
