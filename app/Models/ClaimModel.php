@@ -59,13 +59,15 @@ class ClaimModel extends Model
     protected $beforeFind = [];
     protected $afterFind = [];
     protected $beforeDelete = [];
-    protected $afterDelete = [];    /**
-            * Get faucet cooldown time from environment variable.
-            * This value can be configured in .env file using FAUCET_COOLDOWN.
-            * If not set in .env, defaults to 300 seconds (5 minutes).
-            *
-            * @return int The cooldown time in seconds between faucet claims
-            */
+    protected $afterDelete = [];
+
+    /**
+     * Get faucet cooldown time from environment variable.
+     * This value can be configured in .env file using FAUCET_COOLDOWN.
+     * If not set in .env, defaults to 300 seconds (5 minutes).
+     *
+     * @return int The cooldown time in seconds between faucet claims
+     */
     private function getFaucetCooldown(): int
     {
         return (int) env('FAUCET_COOLDOWN', 300);
