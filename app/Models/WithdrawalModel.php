@@ -106,7 +106,7 @@ class WithdrawalModel extends Model
     public function convertPointsToUSD(int $points): float
     {
         // Assuming 1 USD = 10000 Points
-        $conversionRate = 10000.0; // 1 USD = 10000 Points
+        $conversionRate = 10000000.0; // 1 USD = 10000 Points
         return $points / $conversionRate; // Convert points to USD
 
     }

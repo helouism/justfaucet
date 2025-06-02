@@ -145,17 +145,20 @@ class UserModel extends ShieldUserModel
         $row = $query->getRow();
         return (int) (($row->level + 1) * 100 - $row->exp); // Calculate exp needed for next level
     }
-
-    // Insert referral bonus
+    // Apply referral bonus using Model's update method
     public function applyReferralBonus($user_id, $claimAmount)
     {
         $referralInfo = $this->checkReferral($user_id);
         if ($referralInfo) {
             $referralBonus = $claimAmount * 0.10;
-            return $this->db->query(
-                "UPDATE users SET points = points + ? WHERE id = ?",
-                [$referralBonus, $referralInfo['referrer_id']]
-            );
+            $referrer = $this->find($referralInfo['referrer_id']);
+
+            if ($referrer) {
+                // Update referrer's points using the model's update method
+                return $this->update($referralInfo['referrer_id'], [
+                    'points' => (float) $referrer->points + $referralBonus
+                ]);
+            }
         }
         return false; // No referral bonus applied
     }

@@ -59,9 +59,25 @@ class ClaimModel extends Model
     protected $beforeFind = [];
     protected $afterFind = [];
     protected $beforeDelete = [];
-    protected $afterDelete = [];
+    protected $afterDelete = [];    /**
+            * Get faucet cooldown time from environment variable.
+            * This value can be configured in .env file using FAUCET_COOLDOWN.
+            * If not set in .env, defaults to 300 seconds (5 minutes).
+            *
+            * @return int The cooldown time in seconds between faucet claims
+            */
+    private function getFaucetCooldown(): int
+    {
+        return (int) env('FAUCET_COOLDOWN', 300);
+    }
 
-    // Check if user ID can claim faucet, Faucet can be claimed every 5 minutes
+    /**
+     * Check if a user is eligible to claim from the faucet based on cooldown period.
+     * The cooldown period is controlled by FAUCET_COOLDOWN in .env file.
+     *
+     * @param int $userId The ID of the user attempting to claim
+     * @return bool True if user can claim, false if still in cooldown period
+     */
     public function canUserIdClaimFaucet(int $userId): bool
     {
         $builder = $this->db->table($this->table);
@@ -79,8 +95,8 @@ class ClaimModel extends Model
         $lastClaimed = strtotime($row->created_at);
         $currentTime = time();
 
-        // Check if 5 minutes (300 seconds) have passed
-        return ($currentTime - $lastClaimed) >= 300;
+        // Check if cooldown period has passed
+        return ($currentTime - $lastClaimed) >= $this->getFaucetCooldown();
     }
 
     /**
@@ -354,12 +370,11 @@ class ClaimModel extends Model
         $builder->orderBy('created_at', 'DESC');
         $builder->limit(1);
         $lastClaim = $builder->get()->getRow();
-
         if (!$lastClaim) {
             return null; // No claims found
         }
 
-        return strtotime($lastClaim->created_at) + 300;
+        return strtotime($lastClaim->created_at) + $this->getFaucetCooldown();
     }
 
     /**
@@ -460,8 +475,8 @@ class ClaimModel extends Model
         $lastClaimed = strtotime($row->created_at);
         $currentTime = time();
 
-        // Check if 5 minutes (300 seconds) have passed
-        return ($currentTime - $lastClaimed) >= 300;
+        // Check if cooldown period has passed
+        return ($currentTime - $lastClaimed) >= $this->getFaucetCooldown();
     }
 
     /**

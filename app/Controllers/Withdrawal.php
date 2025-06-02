@@ -35,12 +35,6 @@ class Withdrawal extends BaseController
         $this->response->setHeader('Content-Type', 'application/json');
         $user_id = auth()->id();
         $amount = $this->request->getPost('amount');
-        // Create a new Api class instance.
-        // $faucetpay_api = new Api(getenv('FAUCETPAY_API_KEY'), 'USDT');
-
-        // Check if user can withdraw
-
-
 
         $rules = [
 
@@ -73,21 +67,7 @@ class Withdrawal extends BaseController
             ];
             return $this->response->setJSON($response);
         } else {
-            // Create withdrawal record
-            // $user_email = $this->userModel->getUserEmail($user_id);
-            // $response = $faucetpay_api->send($user_email, $amount);
 
-            // if ($response->isSuccessful()) {
-            //     $data = $response->getData();
-            //     $withdrawalData = [
-            //         'user_id' => $user_id,
-            //         'email' => $user_email,
-            //         'amount' => $amount,
-            //         'status' => 'paid',
-            //         'faucetpay_payout_id' => $data['payout_id'] ?? null, // Assuming API returns transaction ID
-            //     ];
-            //     // Save withdrawal to database
-            //     $withdrawalData[''] = $data[''] ?? null;
 
             $withdrawalData = [
                 'user_id' => $user_id,

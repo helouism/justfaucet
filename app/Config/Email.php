@@ -28,7 +28,7 @@ class Email extends BaseConfig
     /**
      * SMTP Server Hostname
      */
-    public string $SMTPHost = 'smtp.gmail.com';
+    public string $SMTPHost = '';
 
     /**
      * SMTP Username
@@ -43,7 +43,7 @@ class Email extends BaseConfig
     /**
      * SMTP Port
      */
-    public int $SMTPPort = 465;
+    public int $SMTPPort = 587;
 
     /**
      * SMTP Timeout (in seconds)
@@ -62,7 +62,7 @@ class Email extends BaseConfig
      *             to the server. 'ssl' means implicit SSL. Connection on port
      *             465 should set this to ''.
      */
-    public string $SMTPCrypto = 'ssl';
+    public string $SMTPCrypto = 'tls';
 
     /**
      * Enable word-wrap
@@ -95,12 +95,12 @@ class Email extends BaseConfig
     public int $priority = 3;
 
     /**
-     * Newline character. (Use “\r\n” to comply with RFC 822)
+     * Newline character. (Use "\r\n" to comply with RFC 822)
      */
     public string $CRLF = "\r\n";
 
     /**
-     * Newline character. (Use “\r\n” to comply with RFC 822)
+     * Newline character. (Use "\r\n" to comply with RFC 822)
      */
     public string $newline = "\r\n";
 
@@ -118,4 +118,18 @@ class Email extends BaseConfig
      * Enable notify message from server
      */
     public bool $DSN = false;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Load email configuration from environment variables
+        $this->fromEmail = env('email.fromEmail', 'noreply@example.com');
+        $this->fromName = env('email.fromName', 'Your App Name');
+        $this->SMTPHost = env('email.SMTPHost', 'smtp.gmail.com');
+        $this->SMTPUser = env('email.SMTPUser', '');
+        $this->SMTPPass = env('email.SMTPPass', '');
+        $this->SMTPPort = env('email.SMTPPort', 587);
+        $this->SMTPCrypto = env('email.SMTPCrypto', 'tls');
+    }
 }
