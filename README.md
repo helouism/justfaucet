@@ -21,7 +21,12 @@ composer install
 php spark shield:setup
 ```
 
-10. Configure your IPHUB and VPNAPI API KEY in `.env` file
+10. Configure your FAUCETPAY, IPHUB, VPNAPI API KEY in `.env` file
+
+11. To set up the cron job on your server to run every 5 minutes, add this to your crontab:
+```console
+*/5 * * * * cd /path/to/your/project && php spark faucet:refresh-balance
+```
 
 ### Features
 - Admin Dashboard

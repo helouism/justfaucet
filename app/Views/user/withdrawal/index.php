@@ -70,7 +70,7 @@
             e.preventDefault(); // Prevent default form submission
 
             var amount = $('#amount').val();
-            if (amount < 2000 || amount > 100000) {
+            if (amount < 2 || amount > 100000) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
