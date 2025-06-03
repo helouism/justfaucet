@@ -29,9 +29,30 @@ class ClaimModel extends Model
 
     // Validation
     protected $validationRules = [
-        'user_id' => 'required|integer',
-        'claim_amount' => 'required|decimal',
-        'ip_address' => 'required|valid_ip'
+        'user_id' => [
+            'label' => 'User ID',
+            'rules' => 'required|integer',
+            'errors' => [
+                'required' => 'User ID is required.',
+                'integer' => 'User ID must be an integer.'
+            ]
+        ],
+        'claim_amount' => [
+            'label' => 'Claim Amount',
+            'rules' => 'required|decimal',
+            'errors' => [
+                'required' => 'Claim amount is required.',
+                'decimal' => 'Claim amount must be a decimal value.'
+            ]
+        ],
+        'ip_address' => [
+            'label' => 'IP Address',
+            'rules' => 'required|valid_ip',
+            'errors' => [
+                'required' => 'IP address is required.',
+                'valid_ip' => 'IP address must be valid.'
+            ]
+        ]
     ];
     protected $validationMessages = [
         'user_id' => [

@@ -85,11 +85,24 @@ class Claim extends BaseController
         $level = (int) $userData->level;
         $claimAmount = 5 + ($level * 0.01);
 
+        $rules = $this->claimModel->validationRules;
+        if (!$this->validate($rules)) {
+            $response = [
+                'error' => 'Error.',
+                'message' => implode('<br>', $this->validator->getErrors()),
+            ];
+
+        }
+
         $claimData = [
             'user_id' => $user_id,
             'claim_amount' => $claimAmount,
             'ip_address' => $ipAddress
         ];
+
+
+
+
 
         // Insert claim record
         $this->claimModel->insert($claimData);
