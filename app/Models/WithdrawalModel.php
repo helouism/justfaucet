@@ -29,11 +29,40 @@ class WithdrawalModel extends Model
 
     // Validation
     protected $validationRules = [
-        'user_id' => 'required|integer',
-        'amount' => 'required|integer|greater_than_equal_to[2000]|less_than_equal_to[100000]',
-        'status' => 'in_list[paid,failed]'
+        'amount' => [
+            'label' => 'Amount',
+            'rules' => 'required|integer|greater_than_equal_to[2000]|less_than_equal_to[100000]',
+            'errors' => [
+                'required' => 'Amount is required.',
+                'integer' => 'Amount must be an integer.',
+
+                'greater_than_equal_to' => 'Amount must be at least 2000 points.',
+                'less_than_equal_to' => 'Amount must not exceed 100000 points.'
+            ]
+        ],
+
     ];
-    protected $validationMessages = [];
+
+    protected $validationMessages = [
+        'user_id' => [
+            'required' => 'User ID is required.',
+            'integer' => 'User ID must be an integer.'
+        ],
+        'amount' => [
+            'required' => 'Amount is required.',
+            'integer' => 'Amount must be an integer.',
+            'greater_than' => 'You do not have enough points',
+            'greater_than_equal_to' => 'Amount must be at least 2000 points.',
+            'less_than_equal_to' => 'Amount must not exceed 100000 points.'
+        ],
+        'status' => [
+            'in_list' => 'Status must be either paid or failed.'
+        ],
+        'faucetpay_payout_id' => [
+            'required' => 'FaucetPay payout ID is required.',
+            'integer' => 'FaucetPay payout ID must be an integer.'
+        ]
+    ];
     protected $skipValidation = false;
     protected $cleanValidationRules = true;
 

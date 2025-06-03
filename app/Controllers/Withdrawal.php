@@ -42,17 +42,18 @@ class Withdrawal extends BaseController
         $user_id = auth()->id();
         $amount = $this->request->getPost('amount');
 
-        $rules = [
-            'amount' => [
-                'rules' => 'required|integer|greater_than_equal_to[2]|less_than_equal_to[100000]',
-                'errors' => [
-                    'required' => 'The amount field is required.',
-                    'integer' => 'The amount must be an integer.',
-                    'greater_than_equal_to' => 'You need at least 2000 Points to withdraw.',
-                    'less_than_equal_to' => 'The amount must not exceed 100000.',
-                ]
-            ]
-        ];
+        //Check if the user balance has enough points
+        $user_points = $this->userModel->getBalance($user_id);
+
+        if ($user_points < $amount) {
+            $response = [
+                'error' => 'Withdrawal failed.',
+                'message' => 'You do not have enough points.',
+            ];
+            return $this->response->setJSON($response);
+        }
+
+        $rules = $this->withdrawalModel->validationRules;
 
         // Validate input data
         if (!$this->validate($rules)) {
@@ -63,16 +64,7 @@ class Withdrawal extends BaseController
             return $this->response->setJSON($response);
         }
 
-        // Check if the user has enough points
-        $user_points = $this->userModel->getBalance($user_id);
 
-        if ($user_points < $amount) {
-            $response = [
-                'error' => 'Withdrawal failed.',
-                'message' => 'You do not have enough points.',
-            ];
-            return $this->response->setJSON($response);
-        }
         try {
             // Get the faucet balance from cache or API
             $cache = \Config\Services::cache();
@@ -117,7 +109,7 @@ class Withdrawal extends BaseController
                     'user_id' => $user_id,
                     'amount' => $amount,
                     'status' => 'paid',
-                    'faucetpay_payout_id' => $responseData['payout_id'] ?? null,
+                    'faucetpay_payout_id' => $responseData['payout_id'],
                 ];
 
                 $this->withdrawalModel->insert($withdrawalData);
