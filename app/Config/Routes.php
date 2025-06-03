@@ -32,6 +32,8 @@ $routes->get('/', 'Home::index');
 $routes->group('', ['filter' => 'group:user'], static function ($routes) {
     $routes->get('dashboard', 'Dashboard::index');
     $routes->get('profile', 'Profile::index');
+    $routes->get('profile/edit', 'Profile::edit');
+    $routes->post('profile/update', 'Profile::updatePassword');
     $routes->get('challenge', 'Challenge::index');
     $routes->post('challenge/claim/(:num)', 'Challenge::claim/$1');
     $routes->get('claim', 'Claim::index');

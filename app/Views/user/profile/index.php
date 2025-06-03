@@ -11,7 +11,8 @@
                     <div class="profile-avatar me-3">
                         <i class="fas fa-user"></i>
                     </div>
-                    <h2 class="welcome-title mb-0"><?= esc($user->username) ?>'s Profile</h2>
+                    <h2 class="welcome-title mb-0"><?= esc($user->username) ?></h2>
+
                 </div>
 
                 <!-- User Details Section -->
@@ -40,6 +41,12 @@
                                 </div>
                             </div>
                         </div>
+
+                        <a class="btn btn-sm btn-outline-primary" href="<?= base_url('/profile/edit') ?>">
+                            Change Password
+                        </a>
+
+
                     </div>
                 </div>
 
@@ -55,7 +62,7 @@
                             <i class="fas fa-bitcoin stat-icon"></i>
                             <div class="stat-label">Balance</div>
                             <div class="stat-number">
-                                <?= number_format($balance, 3) ?>
+                                <?= number_format($balance, 2) ?>
                                 <small>Points</small>
                             </div>
                         </div>
