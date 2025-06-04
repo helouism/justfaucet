@@ -30,9 +30,7 @@
             </span>
         </button>
 
-        <div class="mt-2">
-            <small class="text-muted">Complete the captcha above to enable the claim button</small>
-        </div>
+
     </div>
 </div>
 
