@@ -103,9 +103,32 @@ database.default.port = 3306
 #--------------------------------------------------------------------
 
 # logger.threshold = 4
+#--------------------------------------------------------------------
 
-VPNAPI_KEY="YOUR_VPN_API_KEY"
+# VPNAPI, IPHUB API KEY
 
-IPHUB_KEY="YOUR_IPHUB_KEY"
-HCAPTCHA_SECRET_KEY="YOUR_HCAPTCHA_SECRET_KEY"
-HCAPTCHA_SITE_KEY="YOUR_HCAPTCHA_SITE_KEY"
+#--------------------------------------------------------------------
+
+VPNAPI_KEY = "YOUR VPN API KEY"
+IPHUB_KEY = "YOUR IPHUB KEY"
+#--------------------------------------------------------------------
+
+# hCAPTCHA
+
+#--------------------------------------------------------------------
+HCAPTCHA_SECRET_KEY = "YOUR HCAPTCHA SECRET KEY"
+HCAPTCHA_SITE_KEY = "YOUR HCAPTCHA SITE KEY"
+
+#--------------------------------------------------------------------
+
+# FAUCET SETTINGS
+
+#--------------------------------------------------------------------
+# THE COOLDOWN TIMER FOR FAUCET IN SECONDS
+FAUCET_COOLDOWN = 300
+# THE BASE AMOUNT OF POINTS FOR CLAIMING FAUCET
+BASE_CLAIM_AMOUNT = 5 
+# THE REFERRAL BONUS COMMISION PERCENTAGE
+REFERRAL_COMMISSION_PERCENTAGE = 0.10
+# YOUR FAUCETPAY API KEY
+FAUCETPAY_API_KEY = "YOUR FAUCETPAY API KEY"
