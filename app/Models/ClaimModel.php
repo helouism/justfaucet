@@ -91,7 +91,7 @@ class ClaimModel extends Model
      */
     private function getFaucetCooldown(): int
     {
-        return (int) env('FAUCET_COOLDOWN', 300);
+        return (int) env('FAUCET_COOLDOWN');
     }
 
     /**

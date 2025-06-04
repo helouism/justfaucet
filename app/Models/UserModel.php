@@ -150,7 +150,7 @@ class UserModel extends ShieldUserModel
     {
         $referralInfo = $this->checkReferral($user_id);
         if ($referralInfo) {
-            $referralBonus = $claimAmount * 0.10;
+            $referralBonus = $claimAmount * $this->referralCommissionPercentage();
             $referrer = $this->find($referralInfo['referrer_id']);
 
             if ($referrer) {
@@ -193,7 +193,10 @@ class UserModel extends ShieldUserModel
     }
 
 
-
+    private function referralCommissionPercentage(): float
+    {
+        return (float) env('REFERRAL_COMMISSION_PERCENTAGE');
+    }
 
 
 }

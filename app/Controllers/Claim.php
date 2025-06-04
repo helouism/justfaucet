@@ -12,6 +12,8 @@ class Claim extends BaseController
     protected $claimModel;
     protected $fraudUserModel;
 
+
+
     public function __construct()
     {
         $this->userModel = new UserModel();
@@ -21,8 +23,6 @@ class Claim extends BaseController
 
     public function index(): string
     {
-
-
         $data = [
             'title' => 'Claim',
 
@@ -31,7 +31,6 @@ class Claim extends BaseController
     }
 
     // CLAIM ACTION
-
     public function store()
     {
         $this->response->setHeader('Content-Type', 'application/json');
@@ -83,7 +82,7 @@ class Claim extends BaseController
         // Get user's current level and calculate claim amount
         $userData = $this->userModel->find($user_id);
         $level = (int) $userData->level;
-        $claimAmount = 5 + ($level * 0.01);
+        $claimAmount = $this->baseClaimAmount() + ($level * 0.01);
 
         $rules = $this->claimModel->validationRules;
         if (!$this->validate($rules)) {
@@ -390,5 +389,10 @@ class Claim extends BaseController
             log_message('error', 'hCaptcha verification failed: ' . $e->getMessage());
             return false;
         }
+    }
+
+    private function baseClaimAmount(): int
+    {
+        return (int) env('BASE_CLAIM_AMOUNT');
     }
 }
