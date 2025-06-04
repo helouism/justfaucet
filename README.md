@@ -14,7 +14,7 @@ git clone https://github.com/helouism/justfaucet.git
 ```console
 composer install
 ```
-4. Rename env to .env
+4. Rename `env.example` to `.env`
 5. Configure your database and email credentials in the `.env` file, do not overwrite the `Auth.php`, `AuthGroups.php`, `AuthToken.php` file
 6. Run this command to setup CodeIgniter Shield and follow the instructions
 ```console
