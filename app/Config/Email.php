@@ -43,7 +43,7 @@ class Email extends BaseConfig
     /**
      * SMTP Port
      */
-    public int $SMTPPort = 587;
+    public int $SMTPPort = 465;
 
     /**
      * SMTP Timeout (in seconds)
@@ -124,12 +124,12 @@ class Email extends BaseConfig
         parent::__construct();
 
         // Load email configuration from environment variables
-        $this->fromEmail = env('email.fromEmail', 'noreply@example.com');
-        $this->fromName = env('email.fromName', 'Your App Name');
-        $this->SMTPHost = env('email.SMTPHost', 'smtp.gmail.com');
-        $this->SMTPUser = env('email.SMTPUser', '');
-        $this->SMTPPass = env('email.SMTPPass', '');
-        $this->SMTPPort = env('email.SMTPPort', 587);
-        $this->SMTPCrypto = env('email.SMTPCrypto', 'tls');
+        $this->fromEmail = env('email.fromEmail');
+        $this->fromName = env('email.fromName');
+        $this->SMTPHost = env('email.SMTPHost');
+        $this->SMTPUser = env('email.SMTPUser');
+        $this->SMTPPass = env('email.SMTPPass');
+        $this->SMTPPort = env('email.SMTPPort');
+        $this->SMTPCrypto = env('email.SMTPCrypto');
     }
 }
