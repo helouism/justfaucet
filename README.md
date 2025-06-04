@@ -22,8 +22,9 @@ php spark shield:setup
 ```
 
 10. Configure your FAUCETPAY, IPHUB, VPNAPI API KEY in `.env` file
+11. Setup your faucet settings like cooldown, base amount and referral bonus commission percentage in the `.env` file
 
-11. To set up the cron job on your server to run every 5 minutes, add this to your crontab:
+12. To set up the cron job on your server to run every 5 minutes, add this to your crontab:
 ```console
 */5 * * * * cd /path/to/your/project && php spark faucet:refresh-balance
 ```
