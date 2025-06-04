@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Justfaucet</title>
+    <title>Justfaucet</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
@@ -65,16 +65,16 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="feature-card text-center">
-                            <i class="fas fa-coins feature-icon"></i>
-                            <h3>Instant Rewards</h3>
-                            <p>Claim your crypto rewards instantly with our automated system.</p>
+                            <i class="fa-solid fa-fire feature-icon"></i>
+                            <h3>Daily Challenges</h3>
+                            <p>Complete daily challenges and earn bonus points.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="feature-card text-center">
-                            <i class="fas fa-shield-alt feature-icon"></i>
-                            <h3>Secure Platform</h3>
-                            <p>Your security is our top priority with advanced protection measures.</p>
+                            <i class="fas fa-turn-up feature-icon"></i>
+                            <h3>Level System</h3>
+                            <p>Earn EXP for every claim you make and level up.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -82,6 +82,14 @@
                             <i class="fas fa-users feature-icon"></i>
                             <h3>Referral Program</h3>
                             <p>Earn extra rewards by inviting your friends to join our platform.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mx-auto mt-3">
+                        <div class="feature-card text-center">
+                            <i class="fas fa-money-bill feature-icon"></i>
+                            <h3>Instant Withdrawal</h3>
+                            <p>Withdraw instantly to your faucetpay account.</p>
                         </div>
                     </div>
                 </div>

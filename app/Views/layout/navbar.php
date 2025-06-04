@@ -7,7 +7,6 @@
         <?php endif; ?>
 
         <a class="navbar-brand" href="dashboard">
-
             JustFaucet
         </a>
 
