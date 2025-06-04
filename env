@@ -58,6 +58,7 @@ database.default.DBDriver = MySQLi
 database.default.DBPrefix =
 database.default.port = 3306
 
+
 # If you use MySQLi as tests, first update the values of Config\Database::$tests.
 
 # database.tests.hostname = localhost
@@ -77,6 +78,18 @@ database.default.port = 3306
 # database.tests.DBCollat = utf8mb4_general_ci
 
 # database.tests.port = 3306
+
+#--------------------------------------------------------------------
+# EMAIL
+#--------------------------------------------------------------------
+email.fromEmail = "youremail@example.com"
+email.fromName = "JustFaucet"
+email.SMTPHost = "smtp.example.com"
+email.SMTPUser = "your@example.com"
+email.SMTPPass = ""
+email.SMTPPort = 465
+email.SMTPCrypto = "ssl"
+#--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
 
