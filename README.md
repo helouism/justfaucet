@@ -1,4 +1,5 @@
 # JustFaucet - A Simple Crypto Faucet Website built with CodeIgniter 4
+![Faucet](https://github.com/user-attachments/assets/5221fad3-6fb1-46a2-b07a-6ab911081054)
 
 ## What is JustFaucet?
 
