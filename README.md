@@ -48,3 +48,6 @@ CodeIgniter 4 with CodeIgniter Shield for Authentication
 - Sweetalert2
 - jQuery
 - FontAwesome
+
+## Contribution
+Feel free to contribute to the project.
