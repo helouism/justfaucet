@@ -147,7 +147,7 @@ class WithdrawalModel extends Model
     public function convertPoints(int $points): float
     {
         // Conversion rate: 10,000 points = 1 USD
-        // Adjust this rate according to your system's economics
+
         $conversionRate = 10000.0; // 10,000 points = 1 USD
         return round(($points / $conversionRate) * 100000000, 8); // Round to 8 decimal places for precision
     }

@@ -16,9 +16,9 @@ class UserModel extends ShieldUserModel
             ...$this->allowedFields,
 
             'referred_by',
-            'points', // Points column for user balance
-            'exp', // Experience points for leveling up
-            'level', // User level based on experience points
+            'points',
+            'exp',
+            'level',
 
         ];
     }
@@ -95,7 +95,7 @@ class UserModel extends ShieldUserModel
         return [
             'referrer_id' => $row->referred_by,
             'referrer_username' => $row->referrer_username,
-            'referred_at' => $row->created_at // Assuming referral happened at user creation
+            'referred_at' => $row->created_at
         ];
     }
 
@@ -154,13 +154,13 @@ class UserModel extends ShieldUserModel
             $referrer = $this->find($referralInfo['referrer_id']);
 
             if ($referrer) {
-                // Update referrer's points using the model's update method
+
                 return $this->update($referralInfo['referrer_id'], [
                     'points' => (float) $referrer->points + $referralBonus
                 ]);
             }
         }
-        return false; // No referral bonus applied
+        return false;
     }
 
     /**
