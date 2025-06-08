@@ -23,7 +23,7 @@
             <div class="stat-card mb-4">
                 <i class="fas fa-users stat-icon"></i>
                 <div class="stat-label">Total Referrals</div>
-                <div class="stat-number"><?= $total_referrals ?></div>
+                <div class="stat-number"><?= number_format($total_referrals, 0) ?></div>
             </div>
         </div>
         <div class="col-md-4">
@@ -46,52 +46,54 @@
         <div class="card-body">
             <h4 class="mb-4" style="color: var(--secondary-color);">Your Referrals</h4>
             <?php if (empty($referrals)): ?>
-                    <div class="alert alert-info">
-                        You haven't referred anyone yet. Share your referral link to start earning!
-                    </div>
+                <div class="alert alert-info">
+                    You haven't referred anyone yet. Share your referral link to start earning!
+                </div>
             <?php else: ?>
-                    <div class="table-responsive">
-                        <table id="referralsTable" class="table table-striped">
-                            <thead>
+                <div class="table-responsive">
+                    <table id="referralsTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Registered</th>
+                                <th>Last Active</th>
+                                <th>Claims (30d)</th>
+                                <th>You earned</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($referrals as $referral): ?>
                                 <tr>
-                                    <th>Username</th>
-                                    <th>Registered</th>
-                                    <th>Last Active</th>
-                                    <th>Claims (30d)</th>
-                                    <th>You earned</th>
+                                    <td><?= esc($referral['username']) ?></td>
+                                    <td data-sort="<?= strtotime($referral['created_at']) ?>">
+                                        <?= date('Y-m-d', strtotime($referral['created_at'])) ?>
+                                    </td>
+                                    <td data-sort="<?= strtotime($referral['last_active']) ?>">
+                                        <?= date('Y-m-d', strtotime($referral['last_active'])) ?>
+                                    </td>
+                                    <td><?= $referral['claims_30days'] ?></td>
+                                    <td data-sort="<?= $referral['earnings'] ?>">
+                                        <?= number_format($referral['earnings'], 2) ?> points
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($referrals as $referral): ?>
-                                        <tr>
-                                            <td><?= esc($referral['username']) ?></td>
-                                            <td data-sort="<?= strtotime($referral['created_at']) ?>">
-                                                <?= date('Y-m-d', strtotime($referral['created_at'])) ?>
-                                            </td>
-                                            <td data-sort="<?= strtotime($referral['last_active']) ?>">
-                                                <?= date('Y-m-d', strtotime($referral['last_active'])) ?>
-                                            </td>
-                                            <td><?= $referral['claims_30days'] ?></td>
-                                            <td data-sort="<?= $referral['earnings'] ?>">
-                                                <?= number_format($referral['earnings'], 2) ?> points
-                                            </td>
-                                        </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
         </div>
     </div>
 </div>
 
 <!-- DataTables & SweetAlert, jquery Scripts -->
-<script src="<?= base_url("assets/jquery/jquery.min.js") ?>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 
 
-<script >
+<script>
     $(document).ready(function () {
         $('#referralsTable').DataTable({
             responsive: true,
