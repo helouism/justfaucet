@@ -15,7 +15,11 @@ class Admin extends BaseController
     }
     public function index(): string
     {
+        $total_users = count($this->userModel->getAllUsers() ?? 0);
+        $total_withdrawals = count($this->withdrawalModel->getAllWithdrawals() ?? 0);
         $data = [
+            'total_users' => $total_users,
+            'total_withdrawals' => $total_withdrawals,
             'title' => 'Admin Dashboard',
         ];
 

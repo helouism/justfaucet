@@ -126,7 +126,7 @@ class WithdrawalModel extends Model
     public function getAllWithdrawals(): array
     {
         $builder = $this->db->table($this->table);
-        $builder->select('withdrawals.*, users.username, users.email');
+        $builder->select('withdrawals.*, users.username');
         $builder->join('users', 'users.id = withdrawals.user_id', 'left');
         $builder->orderBy('withdrawals.created_at', 'DESC'); // Order by created_at in descending order
         $query = $builder->get();
