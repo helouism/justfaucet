@@ -46,7 +46,7 @@
 
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         let countdown;
         let captchaCompleted = false;
         let canClaimNow = false;
@@ -140,7 +140,7 @@
         }
 
         function checkClaimStatus() {
-            $.get('<?= site_url('claim/status') ?>', function (response) {
+            $.get('<?= site_url('claim/status') ?>', function(response) {
                 // Check if there's an error in the response
                 if (response.error) {
                     showErrorAlert(response.error);
@@ -160,24 +160,24 @@
                     canClaimNow = false;
                     updateButtonState();
                 }
-            }).fail(function () {
+            }).fail(function() {
                 $('#timer').text('Error loading claim status');
                 showErrorAlert('Unable to connect to server. Please refresh the page.');
             });
         }
 
         // hCaptcha callback functions
-        window.hcaptchaCallback = function () {
+        window.hcaptchaCallback = function() {
             captchaCompleted = true;
             updateButtonState();
         };
 
-        window.hcaptchaExpiredCallback = function () {
+        window.hcaptchaExpiredCallback = function() {
             captchaCompleted = false;
             updateButtonState();
         };
 
-        $('#claimButton').click(function () {
+        $('#claimButton').click(function() {
             if (!captchaCompleted || !canClaimNow) {
                 return;
             }
@@ -199,7 +199,7 @@
                     '<?= csrf_token() ?>': '<?= csrf_hash() ?>',
                     'h-captcha-response': hcaptchaResponse
                 },
-                success: function (response) {
+                success: function(response) {
                     $spinner.hide();
 
                     if (response.success) {
@@ -256,7 +256,7 @@
                         }
                     }
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     $spinner.hide();
                     captchaCompleted = false;
                     hcaptcha.reset();
