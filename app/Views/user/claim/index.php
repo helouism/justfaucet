@@ -33,20 +33,14 @@
 
     </div>
 </div>
-
-
-
-<!-- jQuery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+<?= $this->endSection() ?>
+<?= $this->section('scripts') ?>
 <!-- Hcaptcha & sweetalert2  -->
 <script src="https://js.hcaptcha.com/1/api.js?hl=en" async defer></script>
 
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         let countdown;
         let captchaCompleted = false;
         let canClaimNow = false;
@@ -140,7 +134,7 @@
         }
 
         function checkClaimStatus() {
-            $.get('<?= site_url('claim/status') ?>', function(response) {
+            $.get('<?= site_url('claim/status') ?>', function (response) {
                 // Check if there's an error in the response
                 if (response.error) {
                     showErrorAlert(response.error);
@@ -160,24 +154,24 @@
                     canClaimNow = false;
                     updateButtonState();
                 }
-            }).fail(function() {
+            }).fail(function () {
                 $('#timer').text('Error loading claim status');
                 showErrorAlert('Unable to connect to server. Please refresh the page.');
             });
         }
 
         // hCaptcha callback functions
-        window.hcaptchaCallback = function() {
+        window.hcaptchaCallback = function () {
             captchaCompleted = true;
             updateButtonState();
         };
 
-        window.hcaptchaExpiredCallback = function() {
+        window.hcaptchaExpiredCallback = function () {
             captchaCompleted = false;
             updateButtonState();
         };
 
-        $('#claimButton').click(function() {
+        $('#claimButton').click(function () {
             if (!captchaCompleted || !canClaimNow) {
                 return;
             }
@@ -199,7 +193,7 @@
                     '<?= csrf_token() ?>': '<?= csrf_hash() ?>',
                     'h-captcha-response': hcaptchaResponse
                 },
-                success: function(response) {
+                success: function (response) {
                     $spinner.hide();
 
                     if (response.success) {
@@ -240,7 +234,7 @@
                         hcaptcha.reset();
                         updateButtonState();
 
-                       
+
                         if (response.error && (response.error.includes('VPN') || response.error.includes('Proxy') || response.error.includes('flagged'))) {
                             showErrorAlert(response.error);
                         } else {
@@ -256,7 +250,7 @@
                         }
                     }
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     $spinner.hide();
                     captchaCompleted = false;
                     hcaptcha.reset();
