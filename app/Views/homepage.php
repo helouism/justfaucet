@@ -21,7 +21,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?= base_url('/assets/main/css/index.css') ?>">
+   <?php echo minifier('main.min.css');?>
 
 
 </head>
@@ -101,11 +101,13 @@
 
 
     <!-- Bootstrap JS Bundle -->
-    <script src="<?= base_url("assets/bootstrap/js/bootstrap.bundle.min.js") ?>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
+        integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
     <!-- THEME TOGGLE -->
-    <script src="<?= base_url('assets/main/js/theme.js') ?>"></script>
+    <?php echo minifier('all.min.js') ?>
 </body>
 
 </html>

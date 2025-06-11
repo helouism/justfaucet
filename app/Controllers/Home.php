@@ -6,6 +6,8 @@ class Home extends BaseController
 {
     public function index(): string
     {
+        
+        
         // Get referral ID from URL
         $referredBy = $this->request->getGet('ref');
         if ($referredBy) {

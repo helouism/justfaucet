@@ -23,7 +23,8 @@
 
     <!-- Sweetalert2 -->
     <link rel="stylesheet" href="<?= base_url('/assets/sweetalert2/css/sweetalert2.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/assets/main/css/index.css') ?>">
+    <!-- CUSTOM CSS -->
+    <?php echo minifier('main.min.css'); ?>
 
 
     <script>
@@ -66,10 +67,7 @@
     <script src="<?= base_url('assets/sweetalert2/js/sweetalert2.all.min.js') ?>"></script>
 
     <!-- THEME TOGGLE-->
-    <script src="<?= base_url('assets/main/js/theme.js') ?>"></script>
-
-    <!-- SIDEBAR TOGGLE -->
-    <script src="<?= base_url('assets/main/js/script.js') ?>"></script>
+    <?php echo minifier('main.min.js'); ?>
 
 
 

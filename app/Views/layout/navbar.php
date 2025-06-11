@@ -6,7 +6,7 @@
             </button>
         <?php endif; ?>
 
-        <a class="navbar-brand" href="dashboard">
+        <a class="navbar-brand" href=<?=base_url("dashboard")?>>
             JustFaucet
         </a>
 
@@ -22,7 +22,7 @@
                         <span class="profile-name d-none d-md-inline"><?= auth()->user()->username ?></span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href=<?=base_url("profile")?>><i class="fas fa-user me-2"></i>Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -34,7 +34,7 @@
                     </ul>
                 </div>
             <?php else: ?>
-                <a href="/login" class="btn btn-outline-primary me-2">Login</a>
+                <a href=<?=base_url("login")?> class="btn btn-outline-primary me-2">Login</a>
                 <a href="<?= base_url('register') . (isset($referred_by) ? "?ref={$referred_by}" : '') ?>"
                     class="btn btn-primary">Register</a>
             <?php endif; ?>

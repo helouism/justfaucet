@@ -240,7 +240,7 @@
                         hcaptcha.reset();
                         updateButtonState();
 
-                        // Show error as alert instead of SweetAlert for VPN/Proxy errors
+                       
                         if (response.error && (response.error.includes('VPN') || response.error.includes('Proxy') || response.error.includes('flagged'))) {
                             showErrorAlert(response.error);
                         } else {
