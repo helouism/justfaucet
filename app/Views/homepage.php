@@ -21,7 +21,14 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
 
-
+    <!-- Prevent theme flickering -->
+    <script>
+        (function () {
+            // Get theme from localStorage or default to dark
+            const storedTheme = localStorage.getItem('bsTheme') || 'dark';
+            document.documentElement.setAttribute('data-bs-theme', storedTheme);
+        })();
+    </script>
 
 
 </head>
@@ -40,7 +47,8 @@
                         <span class="badge bg-primary fs-6">Beta Version</span>
                     </div>
                     <h1 class="display-3 fw-bold mb-3 text-primary">Welcome to JustFaucet</h1>
-                    <p class="lead mb-4 text-muted">The most advanced faucet platform for crypto enthusiasts. Earn points every 5 minutes with our secure and reliable system.</p>
+                    <p class="lead mb-4 text-muted">The most advanced faucet platform for crypto enthusiasts. Earn
+                        points every 5 minutes with our secure and reliable system.</p>
                 </div>
 
                 <?php if (auth()->loggedIn()): ?>
@@ -54,8 +62,7 @@
                         <a href="<?= base_url("register") .
                             (isset($referred_by)
                                 ? "?ref={$referred_by}"
-                                : "") ?>"
-                            class="btn btn-primary btn-lg px-5 py-3 me-md-2 fw-semibold">
+                                : "") ?>" class="btn btn-primary btn-lg px-5 py-3 me-md-2 fw-semibold">
                             <i class="fas fa-rocket me-2"></i>Get Started
                         </a>
                         <a href="/login" class="btn btn-outline-success btn-lg px-5 py-3 fw-semibold">
@@ -66,11 +73,14 @@
             </div>
             <div class="col-lg-6 text-center">
                 <div class="position-relative">
-                    <div class="bg-primary bg-gradient rounded-circle p-5 d-inline-flex mb-4" style="width: 200px; height: 200px;">
+                    <div class="bg-primary bg-gradient rounded-circle p-5 d-inline-flex mb-4"
+                        style="width: 200px; height: 200px;">
                         <i class="fas fa-coins text-white" style="font-size: 5rem;"></i>
                     </div>
-                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
-                        <div class="bg-success bg-gradient rounded-circle p-2 position-absolute" style="top: 20%; right: 20%; animation: pulse 2s infinite;">
+                    <div
+                        class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                        <div class="bg-success bg-gradient rounded-circle p-2 position-absolute"
+                            style="top: 20%; right: 20%; animation: pulse 2s infinite;">
                             <i class="fas fa-plus text-white"></i>
                         </div>
                     </div>
@@ -93,7 +103,8 @@
                                 <i class="fa-solid fa-fire text-white fs-2"></i>
                             </div>
                             <h3 class="h5 fw-semibold text-primary mb-2">Daily Challenges</h3>
-                            <p class="text-muted mb-0">Complete daily challenges and earn bonus points to boost your earnings.</p>
+                            <p class="text-muted mb-0">Complete daily challenges and earn bonus points to boost your
+                                earnings.</p>
                         </div>
                     </div>
                 </div>
@@ -105,7 +116,8 @@
                                 <i class="fas fa-trophy text-white fs-2"></i>
                             </div>
                             <h3 class="h5 fw-semibold text-primary mb-2">Level System</h3>
-                            <p class="text-muted mb-0">Earn EXP for every claim you make and level up to unlock rewards.</p>
+                            <p class="text-muted mb-0">Earn EXP for every claim you make and level up to unlock rewards.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -117,7 +129,8 @@
                                 <i class="fas fa-users text-white fs-2"></i>
                             </div>
                             <h3 class="h5 fw-semibold text-primary mb-2">Referral Program</h3>
-                            <p class="text-muted mb-0">Earn 10% commission by inviting your friends and building your network.</p>
+                            <p class="text-muted mb-0">Earn 10% commission by inviting your friends and building your
+                                network.</p>
                         </div>
                     </div>
                 </div>
@@ -129,7 +142,8 @@
                                 <i class="fas fa-money-bill text-white fs-2"></i>
                             </div>
                             <h3 class="h5 fw-semibold text-primary mb-2">Instant Withdrawal</h3>
-                            <p class="text-muted mb-0">Withdraw instantly to your FaucetPay account with minimum fees.</p>
+                            <p class="text-muted mb-0">Withdraw instantly to your FaucetPay account with minimum fees.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -152,14 +166,24 @@
         .hover-card {
             transition: all 0.3s ease;
         }
+
         .hover-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15) !important;
         }
+
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
     </style>
 </body>

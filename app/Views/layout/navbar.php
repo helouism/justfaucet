@@ -12,14 +12,12 @@
         </a>
 
         <div class="ms-auto d-flex align-items-center">
-            <div class="col-auto me-3">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="darkModeSwitch" checked>
-                    <label class="form-check-label" for="darkModeSwitch">
-
-                        <span class="d-none d-sm-inline">Dark Mode</span>
-                    </label>
+            <div class="col-auto me-3 d-flex align-items-center">
+                <i class="fa-solid fa-sun me-2" style="color: #FFD43B;"></i>
+                <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" id="darkModeSwitch">
                 </div>
+                <i class="fa-solid fa-moon ms-2" style="color: #d7e4f9;"></i>
             </div>
             <?php if (auth()->loggedIn()): ?>
                 <div class="dropdown">
@@ -43,16 +41,16 @@
                             <?php $user = auth()->user(); ?>
 
                             <?php if ($user->inGroup("admin")): ?>
-                            <a class="dropdown-item" href="<?= base_url(
-                                "admin/profile"
-                            ) ?>">
+                                <a class="dropdown-item" href="<?= base_url(
+                                    "admin/profile"
+                                ) ?>">
                                 <?php else: ?>
-                                 <a class="dropdown-item" href="<?= base_url(
-                                     "profile"
-                                 ) ?>">
-                                     <?php endif; ?>
-                                <i class="fas fa-user-edit me-2 text-primary"></i>Profile
-                            </a>
+                                    <a class="dropdown-item" href="<?= base_url(
+                                        "profile"
+                                    ) ?>">
+                                    <?php endif; ?>
+                                    <i class="fas fa-user-edit me-2 text-primary"></i>Profile
+                                </a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
@@ -73,8 +71,7 @@
                     <i class="fas fa-sign-in-alt me-1"></i>Login
                 </a>
                 <a href="<?= base_url("register") .
-                    (isset($referred_by) ? "?ref={$referred_by}" : "") ?>"
-                    class="btn btn-primary">
+                    (isset($referred_by) ? "?ref={$referred_by}" : "") ?>" class="btn btn-primary">
                     <i class="fas fa-user-plus me-1"></i>Register
                 </a>
             <?php endif; ?>
