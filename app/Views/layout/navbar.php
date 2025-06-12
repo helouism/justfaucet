@@ -12,13 +12,7 @@
         </a>
 
         <div class="ms-auto d-flex align-items-center">
-            <div class="col-auto me-3 d-flex align-items-center">
-                <i class="fa-solid fa-sun fa-sm me-2" style="color: #FFD43B;"></i>
-                <div class="form-check form-switch mb-0">
-                    <input class="form-check-input" type="checkbox" id="darkModeSwitch">
-                </div>
-                <i class="fa-solid fa-moon fa-sm ms-2" style="color: #d7e4f9;"></i>
-            </div>
+
             <?php if (auth()->loggedIn()): ?>
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle d-flex align-items-center gap-2" type="button"
@@ -67,11 +61,11 @@
             <?php else: ?>
                 <a href="<?= base_url(
                     "login"
-                ) ?>" class="btn btn-outline-primary me-2">
+                ) ?>" class="btn btn-sm btn-outline-primary me-2">
                     <i class="fas fa-sign-in-alt me-1"></i>Login
                 </a>
                 <a href="<?= base_url("register") .
-                    (isset($referred_by) ? "?ref={$referred_by}" : "") ?>" class="btn btn-primary">
+                    (isset($referred_by) ? "?ref={$referred_by}" : "") ?>" class="btn btn-sm btn-primary">
                     <i class="fas fa-user-plus me-1"></i>Register
                 </a>
             <?php endif; ?>
