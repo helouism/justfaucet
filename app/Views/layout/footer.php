@@ -1,15 +1,16 @@
-<footer class="footer mx-auto">
+<footer class="py-4 mx-auto mb-0 border-top text-center ">
     <div class="container-fluid">
-        <!-- Theme Toggle Button -->
-        <button id="themeToggleBtn" class="theme-toggle mx-auto">
-            <i id="theme-icon" class="fas fa-moon"></i>
-        </button>
 
-        <p class="mb-0">
-            &copy; <span><?= date('Y'); ?></span> JustFaucet. All rights reserved. <br>
-            <?php
-            date("H:i");
-            ?>
+
+
+
+        <p class="text-body-secondary mb-0">
+            &copy; <?= date("Y") ?> JustFaucet. All rights reserved.
+            <span class="d-block d-sm-inline mt-1 mt-sm-0 ms-sm-2"><?= date(
+                "H:i"
+            ) ?></span>
         </p>
+
+
     </div>
 </footer>

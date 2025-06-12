@@ -1,40 +1,71 @@
-<?= $this->extend('layout/page_layout') ?>
-<?= $this->section('content') ?>
+<?= $this->extend("layout/page_layout") ?>
+<?= $this->section("content") ?>
 
-<div class="content-card fade-in-up">
-    <div class="welcome-section">
-        <h1 class="welcome-title">Claim Points Every 5 Minutes</h1>
 
-        <div id="timer" class="mb-3 fs-4">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
+                    <h1 class="display-6 text-center mb-4 text-primary fw-bold">
+                        <i class="bi bi-gift-fill me-2"></i>Claim Points Every 5 Minutes
+                    </h1>
+
+                    <div id="timer" class="mb-4 fs-3 text-center fw-semibold">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="spinner-border text-primary me-2" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <span class="text-muted">Loading timer...</span>
+                        </div>
+                    </div>
+
+                    <!-- hCaptcha Container -->
+                    <div id="captcha-container" class="mb-4" style="display: none;">
+                        <div class="alert alert-info border-0 shadow-sm mb-3" role="alert">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-shield-check fs-4 me-2"></i>
+                                <div>
+                                    <strong>Complete the captcha below to claim</strong>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <div class="h-captcha" data-sitekey="<?= env(
+                                "HCAPTCHA_SITE_KEY"
+                            ) ?>" data-callback="hcaptchaCallback"
+                                data-expired-callback="hcaptchaExpiredCallback"></div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-primary btn-lg py-3 fw-semibold position-relative" id="claimButton" disabled>
+                            <i class="bi bi-coin me-2"></i>
+                            <span id="button-text">Solve Captcha First</span>
+                            <span id="button-spinner" class="spinner-border spinner-border-sm ms-2" role="status" style="display: none;">
+                                <span class="visually-hidden">Loading...</span>
+                            </span>
+                        </button>
+                    </div>
+
+                    <!-- Progress indicator -->
+                    <div class="mt-4 text-center">
+                        <small class="text-muted">
+                            <i class="bi bi-clock me-1"></i>
+                            Next claim available every 5 minutes
+                        </small>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- hCaptcha Container -->
-        <div id="captcha-container" class="mb-3" style="display: none;">
-            <div class="text-center mb-2">
-                <label class="form-label">Complete the captcha to enable claim:</label>
-            </div>
-            <div class="d-flex justify-content-center">
-                <div class="h-captcha" data-sitekey="<?= env('HCAPTCHA_SITE_KEY') ?>" data-callback="hcaptchaCallback"
-                    data-expired-callback="hcaptchaExpiredCallback"></div>
-            </div>
-        </div>
-
-        <button type="button" class="btn btn-primary btn-lg" id="claimButton" disabled>
-            <span id="button-text">Solve Captcha First</span>
-            <span id="button-spinner" class="spinner-border spinner-border-sm ms-2" role="status"
-                style="display: none;">
-                <span class="visually-hidden">Loading...</span>
-            </span>
-        </button>
-
-
     </div>
-</div>
+
+
+
+
 <?= $this->endSection() ?>
-<?= $this->section('scripts') ?>
+<?= $this->section("scripts") ?>
 <!-- Hcaptcha & sweetalert2  -->
 <script src="https://js.hcaptcha.com/1/api.js?hl=en" async defer></script>
 
@@ -53,12 +84,12 @@
                 $btn.prop('disabled', true);
                 $btnText.text('Wait for Timer');
             } else if (!captchaCompleted) {
-                $btn.prop('disabled', true);
-                $btnText.text('Solve Captcha First');
-            } else {
-                $btn.prop('disabled', false);
-                $btnText.text('Claim');
-            }
+                $btn.prop('disabled', true).removeClass('btn-success').addClass('btn-primary');
+                    $btnText.text('Solve Captcha First');
+                } else {
+                    $btn.prop('disabled', false).removeClass('btn-primary').addClass('btn-success');
+                    $btnText.text('Claim Now');
+                }
         }
 
         function showCaptcha() {
@@ -80,8 +111,13 @@
 
             // Show bootstrap alert
             const alertHtml = `
-            <div class="alert alert-danger alert-dismissible fade show" role="alert" id="vpn-error-alert">
-                <strong>Access Denied!</strong> ${message}
+            <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm" role="alert" id="vpn-error-alert">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill fs-4 me-2"></i>
+                    <div>
+                        <strong>Access Denied!</strong> ${message}
+                    </div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         `;
@@ -89,8 +125,8 @@
             // Remove existing alert if present
             $('#vpn-error-alert').remove();
 
-            // Add alert before the welcome section
-            $('.welcome-section').prepend(alertHtml);
+            // Add alert before the card
+            $('.container-fluid').prepend(alertHtml);
 
             // Update button state
             canClaimNow = false;
@@ -121,7 +157,11 @@
                 } else {
                     const minutes = Math.floor(timeLeft / 60);
                     const seconds = timeLeft % 60;
-                    $('#timer').text(`Next claim in: ${minutes}:${seconds.toString().padStart(2, '0')}`);
+                    $('#timer').html(`
+                        <i class="bi bi-clock text-primary me-2"></i>
+                        <span class="text-primary">Next claim in: </span>
+                        <span class="badge bg-primary fs-6">${minutes}:${seconds.toString().padStart(2, '0')}</span>
+                    `);
                     canClaimNow = false;
                     updateButtonState();
                     return false;
@@ -134,7 +174,7 @@
         }
 
         function checkClaimStatus() {
-            $.get('<?= site_url('claim/status') ?>', function (response) {
+            $.get('<?= site_url("claim/status") ?>', function (response) {
                 // Check if there's an error in the response
                 if (response.error) {
                     showErrorAlert(response.error);
@@ -142,7 +182,7 @@
                 }
 
                 if (response.canClaim) {
-                    $('#timer').text('Ready to claim!');
+                    $('#timer').html('<i class="bi bi-check-circle-fill text-success me-2"></i><span class="text-success">Ready to claim!</span>');
                     canClaimNow = true;
                     showCaptcha();
                     hideErrorAlert();
@@ -150,12 +190,12 @@
                     updateTimer(response.nextClaimTime);
                 } else {
                     // Handle case where nextClaimTime is not provided
-                    $('#timer').text('Unable to determine next claim time');
+                    $('#timer').html('<i class="bi bi-exclamation-circle text-warning me-2"></i>Unable to determine next claim time');
                     canClaimNow = false;
                     updateButtonState();
                 }
             }).fail(function () {
-                $('#timer').text('Error loading claim status');
+                $('#timer').html('<i class="bi bi-exclamation-triangle text-danger me-2"></i><span class="text-danger">Error loading claim status</span>');
                 showErrorAlert('Unable to connect to server. Please refresh the page.');
             });
         }
@@ -187,7 +227,7 @@
             const hcaptchaResponse = hcaptcha.getResponse();
 
             $.ajax({
-                url: '<?= site_url('claim/action') ?>',
+                url: '<?= site_url("claim/action") ?>',
                 method: 'POST',
                 data: {
                     '<?= csrf_token() ?>': '<?= csrf_hash() ?>',

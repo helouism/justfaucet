@@ -35,7 +35,7 @@ abstract class BaseController extends Controller
      *
      * @var list<string>
      */
-    protected $helpers = ['navigation', 'minifier'];
+    protected $helpers = ["navigation", "minifier", "form"];
 
     /**
      * Be sure to declare properties for any property fetch you initialized.
@@ -46,19 +46,16 @@ abstract class BaseController extends Controller
     /**
      * @return void
      */
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
-    {
+    public function initController(
+        RequestInterface $request,
+        ResponseInterface $response,
+        LoggerInterface $logger
+    ) {
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = service('session');
-
-        
-
-
-
-
     }
 }

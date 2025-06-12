@@ -16,31 +16,28 @@ class Admin extends BaseController
     public function index(): string
     {
         $total_users = count($this->userModel->getAllUsers() ?? 0);
-        $total_withdrawals = count($this->withdrawalModel->getAllWithdrawals() ?? 0);
+        $total_withdrawals = count(
+            $this->withdrawalModel->getAllWithdrawals() ?? 0
+        );
         $data = [
-            'total_users' => $total_users,
-            'total_withdrawals' => $total_withdrawals,
-            'title' => 'Admin Dashboard',
+            "total_users" => $total_users,
+            "total_withdrawals" => $total_withdrawals,
+            "title" => "Admin Dashboard",
         ];
 
-
-
-
-        return view('admin/index', $data);
+        return view("admin/index", $data);
     }
 
     public function profile(): string
     {
         $user = auth()->user();
 
-
         $data = [
-            'title' => 'Profile',
-            'user' => $user
-
+            "title" => "Profile",
+            "user" => $user,
         ];
 
-        return view('admin/profile/index', $data);
+        return view("admin/profile/index", $data);
     }
 
     public function manageUsers(): string
@@ -50,16 +47,23 @@ class Admin extends BaseController
         //Get only users in 'user' group
         $users = $this->userModel->getAllUsers();
 
-
         // Process users to include ban status
         $processedUsers = [];
         $userProvider = auth()->getProvider();
 
         foreach ($users as $userData) {
-            $userEntity = $userProvider->findById($userData['id']);
-            $userData['is_banned'] = $userEntity ? $userEntity->isBanned() : false;
-            $userData['is_active'] = $userEntity ? $userEntity->isActivated() : false;
-            $userData['ban_reason'] = str_replace("You are banned. Reason : ", "", $userEntity ? $userEntity->getBanMessage() : false);
+            $userEntity = $userProvider->findById($userData["id"]);
+            $userData["is_banned"] = $userEntity
+                ? $userEntity->isBanned()
+                : false;
+            $userData["is_active"] = $userEntity
+                ? $userEntity->isActivated()
+                : false;
+            $userData["ban_reason"] = str_replace(
+                "You are banned. Reason : ",
+                "",
+                $userEntity ? $userEntity->getBanMessage() : false
+            );
 
             // If using getAllUsersWithGroups(), you can also display the groups:
             // $userData['user_groups'] = $userData['groups'] ?? 'No groups';
@@ -67,30 +71,25 @@ class Admin extends BaseController
             $processedUsers[] = $userData;
         }
 
-
-
         $data = [
-            'title' => 'Manage Users',
+            "title" => "Manage Users",
 
-            'users' => $processedUsers,
+            "users" => $processedUsers,
         ];
 
-        return view('admin/manage-users/index', $data);
+        return view("admin/manage-users/index", $data);
     }
 
     public function manageWithdrawals(): string
     {
-
-
         $withdrawals = $this->withdrawalModel->getAllWithdrawals();
 
         $data = [
-            'title' => 'Manage Withdrawals',
-            'withdrawals' => $withdrawals,
-
+            "title" => "Manage Withdrawals",
+            "withdrawals" => $withdrawals,
         ];
 
-        return view('admin/manage-withdrawals/index', $data);
+        return view("admin/manage-withdrawals/index", $data);
     }
 
     public function banUser(int $userId): \CodeIgniter\HTTP\RedirectResponse
@@ -103,22 +102,29 @@ class Admin extends BaseController
             $user = $userProvider->findById($userId);
 
             if (!$user) {
-                return redirect()->to('admin/manage-users')->with('error', 'User not found.');
+                return redirect()
+                    ->to("admin/manage-users")
+                    ->with("error", "User not found.");
             }
 
             // Check if user is already banned
             if ($user->isBanned()) {
-                return redirect()->to('admin/manage-users')->with('warning', 'User is already banned.');
+                return redirect()
+                    ->to("admin/manage-users")
+                    ->with("warning", "User is already banned.");
             }
 
             // Ban the user with a reason
-            $user->ban('Banned by administrator');
+            $user->ban("Banned by administrator");
 
-            return redirect()->to('admin/manage-users')->with('success', 'User has been banned successfully.');
-
+            return redirect()
+                ->to("admin/manage-users")
+                ->with("success", "User has been banned successfully.");
         } catch (\Exception $e) {
-            log_message('error', 'Error banning user: ' . $e->getMessage());
-            return redirect()->to('admin/manage-users')->with('error', 'An error occurred while banning the user.');
+            log_message("error", "Error banning user: " . $e->getMessage());
+            return redirect()
+                ->to("admin/manage-users")
+                ->with("error", "An error occurred while banning the user.");
         }
     }
 
@@ -132,98 +138,220 @@ class Admin extends BaseController
             $user = $userProvider->findById($userId);
 
             if (!$user) {
-                return redirect()->to('admin/manage-users')->with('error', 'User not found.');
+                return redirect()
+                    ->to("admin/manage-users")
+                    ->with("error", "User not found.");
             }
 
             // Check if user is actually banned
             if (!$user->isBanned()) {
-                return redirect()->to('admin/manage-users')->with('warning', 'User is not banned.');
+                return redirect()
+                    ->to("admin/manage-users")
+                    ->with("warning", "User is not banned.");
             }
 
             // Unban the user
             $user->unBan();
 
-            return redirect()->to('admin/manage-users')->with('success', 'User has been unbanned successfully.');
-
+            return redirect()
+                ->to("admin/manage-users")
+                ->with("success", "User has been unbanned successfully.");
         } catch (\Exception $e) {
-            log_message('error', 'Error unbanning user: ' . $e->getMessage());
-            return redirect()->to('admin/manage-users')->with('error', 'An error occurred while unbanning the user.');
+            log_message("error", "Error unbanning user: " . $e->getMessage());
+            return redirect()
+                ->to("admin/manage-users")
+                ->with("error", "An error occurred while unbanning the user.");
         }
     }
     public function editUser(int $userId)
     {
-        return view('admin/manage-users/edit', [
-            'title' => 'Edit User',
-            'userId' => $userId,
-            'username' => auth()->getProvider()->find($userId)->username,
-            'email' => auth()->getProvider()->find($userId)->email,
-        ]);
+        // Load Form Helper
+        helper(["form", "url"]);
+
+        try {
+            $userProvider = auth()->getProvider();
+            $user = $userProvider->findById($userId);
+
+            if (!$user) {
+                return redirect()
+                    ->to("admin/manage-users")
+                    ->with("error", "User not found.");
+            }
+
+            // Get user's email from auth_identities
+            $identityModel = model(
+                "CodeIgniter\Shield\Models\UserIdentityModel"
+            );
+            $identity = $identityModel
+                ->where("user_id", $userId)
+                ->where("type", "email_password")
+                ->first();
+
+            $data = [
+                "title" => "Edit User",
+                "userId" => $userId,
+                "user" => $user,
+                "username" => old("username", $user->username),
+                "email" => old("email", $identity ? $identity->secret : ""),
+                "validation" => \Config\Services::validation(),
+            ];
+
+            return view("admin/manage-users/edit", $data);
+        } catch (\Exception $e) {
+            log_message(
+                "error",
+                "Error loading edit user form: " . $e->getMessage()
+            );
+            return redirect()
+                ->to("admin/manage-users")
+                ->with(
+                    "error",
+                    "An error occurred while loading the user data."
+                );
+        }
     }
 
     public function updateUser(int $userId)
     {
+        // Load Form Helper
+        helper(["form", "url"]);
+
+        // Check if this is an AJAX request
+        $isAjax = $this->request->isAJAX();
+
         try {
-            $users = auth()->getProvider();
+            $userProvider = auth()->getProvider();
+            $user = $userProvider->findById($userId);
+
+            if (!$user) {
+                if ($isAjax) {
+                    return $this->response->setJSON([
+                        "success" => false,
+                        "error" => true,
+                        "message" => "User not found",
+                    ]);
+                }
+                return redirect()
+                    ->to("admin/manage-users/edit/" . $userId)
+                    ->with("error", "User not found")
+                    ->withInput();
+            }
+
+            // Get current user's email identity for validation exclusion
+            $identityModel = model(
+                "CodeIgniter\Shield\Models\UserIdentityModel"
+            );
+            $currentIdentity = $identityModel
+                ->where("user_id", $userId)
+                ->where("type", "email_password")
+                ->first();
+
             $userData = $this->request->getPost();
 
             $rules = [
-                'username' => [
-                    'label' => 'Username',
-                    'rules' => 'required|max_length[30]|min_length[3]|regex_match[/\A[a-zA-Z0-9\.]+\z/]|is_unique[users.username,id,' . $userId . ']',
-                    'errors' => [
-                        'is_unique' => 'Username is already taken.',
-                        'regex_match' => 'Username can only contain letters, numbers, and dots.',
-                        'max_length' => 'Username cannot exceed 30 characters.',
-                        'min_length' => 'Username must be at least 3 characters long.'
-                    ]
+                "username" => [
+                    "label" => "Username",
+                    "rules" =>
+                        "required|max_length[30]|min_length[3]|regex_match[/\A[a-zA-Z0-9\.]+\z/]|is_unique[users.username,id," .
+                        $userId .
+                        "]",
+                    "errors" => [
+                        "required" => "Username is required.",
+                        "is_unique" => "Username is already taken.",
+                        "regex_match" =>
+                            "Username can only contain letters, numbers, and dots.",
+                        "max_length" => "Username cannot exceed 30 characters.",
+                        "min_length" =>
+                            "Username must be at least 3 characters long.",
+                    ],
                 ],
-                'email' => [
-                    'label' => 'Email',
-                    'rules' => 'required|max_length[254]|valid_email|is_unique[auth_identities.secret,id,' . $userId . ']',
-                    'errors' => [
-                        'is_unique' => 'Email is already registered.',
-                        'valid_email' => 'Please enter a valid email address.',
-                        'max_length' => 'Email cannot exceed 254 characters.'
-                    ]
+                "email" => [
+                    "label" => "Email",
+                    "rules" =>
+                        "required|max_length[254]|valid_email|is_unique[auth_identities.secret,id," .
+                        ($currentIdentity ? $currentIdentity->id : 0) .
+                        "]",
+                    "errors" => [
+                        "required" => "Email is required.",
+                        "is_unique" => "Email is already registered.",
+                        "valid_email" => "Please enter a valid email address.",
+                        "max_length" => "Email cannot exceed 254 characters.",
+                    ],
                 ],
             ];
+
             // Validate input data
             if (!$this->validate($rules)) {
-                $response = [
-                    'error' => 'Error.',
-                    'message' => implode('<br>', $this->validator->getErrors()),
-                ];
-                return $this->response->setJSON($response);
+                if ($isAjax) {
+                    return $this->response->setJSON([
+                        "success" => false,
+                        "error" => true,
+                        "message" => implode(
+                            "<br>",
+                            $this->validator->getErrors()
+                        ),
+                    ]);
+                }
+                return redirect()
+                    ->to("admin/manage-users/edit/" . $userId)
+                    ->withInput()
+                    ->with("errors", $this->validator->getErrors());
             }
 
+            // Update username in users table
+            $user->username = $userData["username"];
+            $updateResult = $userProvider->save($user);
 
-            // Update the user
-            $user = $users->update($userId, $userData);
+            if (!$updateResult) {
+                if ($isAjax) {
+                    return $this->response->setJSON([
+                        "success" => false,
+                        "error" => true,
+                        "message" => "Failed to update username",
+                    ]);
+                }
+                return redirect()
+                    ->to("admin/manage-users/edit/" . $userId)
+                    ->withInput()
+                    ->with("error", "Failed to update username");
+            }
 
-            if ($user) {
+            // Update email in auth_identities table if it changed
+            if (
+                $currentIdentity &&
+                $currentIdentity->secret !== $userData["email"]
+            ) {
+                $currentIdentity->secret = $userData["email"];
+                $identityModel->save($currentIdentity);
+            }
+
+            if ($isAjax) {
                 return $this->response->setJSON([
-                    'success' => true,
-                    'message' => 'User updated successfully'
-                ]);
-            } else {
-                return $this->response->setJSON([
-                    'success' => false,
-                    'error' => true,
-                    'message' => 'Failed to update user'
+                    "success" => true,
+                    "message" => "User updated successfully",
                 ]);
             }
 
+            return redirect()
+                ->to("admin/manage-users")
+                ->with("success", "User updated successfully");
         } catch (\Exception $e) {
-            return $this->response->setJSON([
-                'success' => false,
-                'error' => true,
-                'message' => 'An error occurred while updating the user'
-            ]);
+            log_message("error", "Error updating user: " . $e->getMessage());
+
+            if ($isAjax) {
+                return $this->response->setJSON([
+                    "success" => false,
+                    "error" => true,
+                    "message" =>
+                        "An error occurred while updating the user: " .
+                        $e->getMessage(),
+                ]);
+            }
+
+            return redirect()
+                ->to("admin/manage-users/edit/" . $userId)
+                ->withInput()
+                ->with("error", "An error occurred while updating the user");
         }
     }
-
-
-
-
-
 }

@@ -1,79 +1,179 @@
-<?= $this->extend('layout/page_layout') ?>
-<?= $this->section('content') ?>
-<div class="container py-4 fade-in-up">
-    <div class="row">
-        <div class="col-12">
-            <div class="content-card mb-4">
-                <div class="card-body">
-                    <h4 class="mb-4" style="color:var(--secondary-color)">Your Referral Link</h4>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" value="<?= $referral_link ?>" id="referralLink"
+<?= $this->extend("layout/page_layout") ?>
+<?= $this->section("content") ?>
+<div class="py-4">
+    <div class="row justify-content-center mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-5 fw-bold text-primary mb-2">
+                <i class="bi bi-person-plus-fill me-2"></i>Referral Program
+            </h1>
+            <p class="lead text-muted">Invite friends and earn 10% commission on their claims!</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary bg-gradient rounded-circle p-2 me-3">
+                            <i class="bi bi-link-45deg text-white fs-5"></i>
+                        </div>
+                        <h4 class="mb-0 fw-semibold text-primary">Your Referral Link</h4>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" value="<?= $referral_link ?>" id="referralLink"
                             readonly>
-                        <button class="btn btn-primary" type="button" onclick="copyReferralLink()">
-                            <i class="fas fa-copy"></i> Copy
+                        <button class="btn btn-primary btn-lg px-4" type="button" onclick="copyReferralLink()">
+                            <i class="bi bi-clipboard me-2"></i>Copy
                         </button>
+                    </div>
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Share this link with friends to start earning commission
+                        </small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row g-4 mb-4">
         <div class="col-md-4">
-            <div class="stat-card mb-4">
-                <i class="fas fa-users stat-icon"></i>
-                <div class="stat-label">Total Referrals</div>
-                <div class="stat-number"><?= number_format($total_referrals, 0) ?></div>
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <div class="bg-info bg-gradient rounded-circle p-3 d-inline-flex mb-3">
+                        <i class="bi bi-people-fill text-white fs-3"></i>
+                    </div>
+                    <h3 class="fw-bold text-primary mb-1"><?= number_format(
+                        $total_referrals,
+                        0
+                    ) ?></h3>
+                    <p class="text-muted mb-0 fw-medium">Total Referrals</p>
+                </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="stat-card mb-4">
-                <i class="fas fa-coins stat-icon"></i>
-                <div class="stat-label">Total Earned</div>
-                <div class="stat-number"><?= number_format($total_earned, 2) ?><small> points</small></div>
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <div class="bg-success bg-gradient rounded-circle p-3 d-inline-flex mb-3">
+                        <i class="bi bi-coin text-white fs-3"></i>
+                    </div>
+                    <h3 class="fw-bold text-primary mb-1"><?= number_format(
+                        $total_earned,
+                        2
+                    ) ?> <small class="fs-6">points</small></h3>
+                    <p class="text-muted mb-0 fw-medium">Total Earned</p>
+                </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="stat-card mb-4">
-                <i class="fas fa-percentage stat-icon"></i>
-                <div class="stat-label">Referral commission</div>
-                <div class="stat-number">10<small>%</small></div>
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <div class="bg-warning bg-gradient rounded-circle p-3 d-inline-flex mb-3">
+                        <i class="bi bi-percent text-white fs-3"></i>
+                    </div>
+                    <h3 class="fw-bold text-primary mb-1">10<small class="fs-6">%</small></h3>
+                    <p class="text-muted mb-0 fw-medium">Commission Rate</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="content-card">
-        <div class="card-body">
-            <h4 class="mb-4" style="color: var(--secondary-color);">Your Referrals</h4>
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center mb-4">
+                <div class="bg-primary bg-gradient rounded-circle p-2 me-3">
+                    <i class="bi bi-list-ul text-white"></i>
+                </div>
+                <h4 class="mb-0 fw-semibold text-primary">Your Referrals</h4>
+            </div>
+
             <?php if (empty($referrals)): ?>
-                <div class="alert alert-info">
-                    You haven't referred anyone yet. Share your referral link to start earning!
+                <div class="alert alert-info border-0 shadow-sm" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-info-circle fs-4 me-3"></i>
+                        <div>
+                            <h6 class="alert-heading mb-1">No referrals yet!</h6>
+                            <p class="mb-0">Share your referral link to start earning commission on your friends' claims.</p>
+                        </div>
+                    </div>
                 </div>
             <?php else: ?>
                 <div class="table-responsive">
-                    <table id="referralsTable" class="table table-striped">
-                        <thead>
+                    <table id="referralsTable" class="table table-hover align-middle">
+                        <thead class="table-light">
                             <tr>
-                                <th>Username</th>
-                                <th>Registered</th>
-                                <th>Last Active</th>
-                                <th>Claims (30d)</th>
-                                <th>You earned</th>
+                                <th class="fw-semibold">
+                                    <i class="bi bi-person me-1"></i>Username
+                                </th>
+                                <th class="fw-semibold">
+                                    <i class="bi bi-calendar-plus me-1"></i>Registered
+                                </th>
+                                <th class="fw-semibold">
+                                    <i class="bi bi-clock me-1"></i>Last Active
+                                </th>
+                                <th class="fw-semibold">
+                                    <i class="bi bi-graph-up me-1"></i>Claims (30d)
+                                </th>
+                                <th class="fw-semibold">
+                                    <i class="bi bi-coin me-1"></i>You Earned
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($referrals as $referral): ?>
                                 <tr>
-                                    <td><?= esc($referral['username']) ?></td>
-                                    <td data-sort="<?= strtotime($referral['created_at']) ?>">
-                                        <?= date('Y-m-d', strtotime($referral['created_at'])) ?>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-secondary bg-gradient rounded-circle p-2 me-2">
+                                                <i class="bi bi-person-fill text-white small"></i>
+                                            </div>
+                                            <span class="fw-medium"><?= esc(
+                                                $referral["username"]
+                                            ) ?></span>
+                                        </div>
                                     </td>
-                                    <td data-sort="<?= strtotime($referral['last_active']) ?>">
-                                        <?= date('Y-m-d', strtotime($referral['last_active'])) ?>
+                                    <td data-sort="<?= strtotime(
+                                        $referral["created_at"]
+                                    ) ?>">
+                                        <span class="badge bg-light text-dark">
+                                            <?= date(
+                                                "M d, Y",
+                                                strtotime(
+                                                    $referral["created_at"]
+                                                )
+                                            ) ?>
+                                        </span>
                                     </td>
-                                    <td><?= $referral['claims_30days'] ?></td>
-                                    <td data-sort="<?= $referral['earnings'] ?>">
-                                        <?= number_format($referral['earnings'], 2) ?> points
+                                    <td data-sort="<?= strtotime(
+                                        $referral["last_active"]
+                                    ) ?>">
+                                        <span class="badge bg-light text-dark">
+                                            <?= date(
+                                                "M d, Y",
+                                                strtotime(
+                                                    $referral["last_active"]
+                                                )
+                                            ) ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">
+                                            <?= $referral[
+                                                "claims_30days"
+                                            ] ?> claims
+                                        </span>
+                                    </td>
+                                    <td data-sort="<?= $referral[
+                                        "earnings"
+                                    ] ?>">
+                                        <span class="badge bg-success">
+                                            <?= number_format(
+                                                $referral["earnings"],
+                                                2
+                                            ) ?> points
+                                        </span>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -85,7 +185,7 @@
     </div>
 </div>
 <?= $this->endSection() ?>
-<?= $this->section('scripts') ?>
+<?= $this->section("scripts") ?>
 
 
 <script>
@@ -119,9 +219,7 @@
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
-            timer: 3000,
-            background: getComputedStyle(document.documentElement).getPropertyValue('--card-bg'),
-            color: getComputedStyle(document.documentElement).getPropertyValue('--text-color')
+            timer: 3000
         });
     }
 </script>
