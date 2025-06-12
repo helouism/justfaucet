@@ -13,11 +13,11 @@
 
         <div class="ms-auto d-flex align-items-center">
             <div class="col-auto me-3 d-flex align-items-center">
-                <i class="fa-solid fa-sun me-2" style="color: #FFD43B;"></i>
+                <i class="fa-solid fa-sun fa-sm me-2" style="color: #FFD43B;"></i>
                 <div class="form-check form-switch mb-0">
                     <input class="form-check-input" type="checkbox" id="darkModeSwitch">
                 </div>
-                <i class="fa-solid fa-moon ms-2" style="color: #d7e4f9;"></i>
+                <i class="fa-solid fa-moon fa-sm ms-2" style="color: #d7e4f9;"></i>
             </div>
             <?php if (auth()->loggedIn()): ?>
                 <div class="dropdown">
