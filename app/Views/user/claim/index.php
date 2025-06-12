@@ -3,63 +3,59 @@
 
 
 
-    <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8 col-sm-10">
-            <div class="card border-0 shadow-lg">
-                <div class="card-body p-5">
-                    <h1 class="display-6 text-center mb-4 text-primary fw-bold">
-                        <i class="bi bi-gift-fill me-2"></i>Claim Points Every 5 Minutes
-                    </h1>
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-5">
+                <h1 class="display-6 text-center mb-4 text-primary fw-bold">
+                    <i class="bi bi-gift-fill me-2"></i>Claim Points Every 5 Minutes
+                </h1>
 
-                    <div id="timer" class="mb-4 fs-3 text-center fw-semibold">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="spinner-border text-primary me-2" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <span class="text-muted">Loading timer...</span>
+                <div id="timer" class="mb-4 fs-3 text-center fw-semibold">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="spinner-border text-primary me-2" role="status">
+                            <span class="visually-hidden">Loading...</span>
                         </div>
-                    </div>
-
-                    <!-- hCaptcha Container -->
-                    <div id="captcha-container" class="mb-4" style="display: none;">
-                        <div class="alert alert-info border-0 shadow-sm mb-3" role="alert">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-shield-check fs-4 me-2"></i>
-                                <div>
-                                    <strong>Complete the captcha below to claim</strong>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <div class="h-captcha" data-sitekey="<?= env(
-                                "HCAPTCHA_SITE_KEY"
-                            ) ?>" data-callback="hcaptchaCallback"
-                                data-expired-callback="hcaptchaExpiredCallback"></div>
-                        </div>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button type="button" class="btn btn-primary btn-lg py-3 fw-semibold position-relative" id="claimButton" disabled>
-                            <i class="bi bi-coin me-2"></i>
-                            <span id="button-text">Solve Captcha First</span>
-                            <span id="button-spinner" class="spinner-border spinner-border-sm ms-2" role="status" style="display: none;">
-                                <span class="visually-hidden">Loading...</span>
-                            </span>
-                        </button>
-                    </div>
-
-                    <!-- Progress indicator -->
-                    <div class="mt-4 text-center">
-                        <small class="text-muted">
-                            <i class="bi bi-clock me-1"></i>
-                            Next claim available every 5 minutes
-                        </small>
+                        <span class="text-muted">Loading timer...</span>
                     </div>
                 </div>
+
+                <!-- hCaptcha Container -->
+                <div id="captcha-container" class="mb-4" style="display: none;">
+                    <div class="alert alert-info border-0 shadow-sm mb-3" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-shield-check fs-4 me-2"></i>
+                            <div>
+                                <strong>Complete the captcha below to claim</strong>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="h-captcha" data-sitekey="<?= env(
+                            "HCAPTCHA_SITE_KEY"
+                        ) ?>" data-callback="hcaptchaCallback" data-expired-callback="hcaptchaExpiredCallback">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary btn-lg py-3 fw-semibold position-relative"
+                        id="claimButton" disabled>
+                        <i class="bi bi-coin me-2"></i>
+                        <span id="button-text">Solve Captcha First</span>
+                        <span id="button-spinner" class="spinner-border spinner-border-sm ms-2" role="status"
+                            style="display: none;">
+                            <span class="visually-hidden">Loading...</span>
+                        </span>
+                    </button>
+                </div>
+
+
             </div>
         </div>
     </div>
+</div>
 
 
 
@@ -85,11 +81,11 @@
                 $btnText.text('Wait for Timer');
             } else if (!captchaCompleted) {
                 $btn.prop('disabled', true).removeClass('btn-success').addClass('btn-primary');
-                    $btnText.text('Solve Captcha First');
-                } else {
-                    $btn.prop('disabled', false).removeClass('btn-primary').addClass('btn-success');
-                    $btnText.text('Claim Now');
-                }
+                $btnText.text('Solve Captcha First');
+            } else {
+                $btn.prop('disabled', false).removeClass('btn-primary').addClass('btn-success');
+                $btnText.text('Claim Now');
+            }
         }
 
         function showCaptcha() {
