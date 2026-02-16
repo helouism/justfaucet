@@ -59,4 +59,18 @@ class View extends BaseView
      * @var list<class-string<ViewDecoratorInterface>>
      */
     public array $decorators = [];
+
+    /**
+     * The folder within the app/Views/ directory that will be used to
+     * store view files that are meant to override the views provided
+     * by third-party packages. This allows you to customize the views
+     * without modifying the original package files, making it easier to
+     * update packages without losing your customizations.
+     *
+     * For example, if a package provides a view at app/Views/vendor/package/view.php,
+     * you can create an override at app/Views/overrides/vendor/package/view.php.
+     *
+     * @var string
+     */
+    public string $appOverridesFolder = 'overrides';
 }

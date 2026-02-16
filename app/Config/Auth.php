@@ -95,6 +95,11 @@ class Auth extends ShieldAuth
      * - register: \CodeIgniter\Shield\Authentication\Actions\EmailActivator::class
      * - login:    \CodeIgniter\Shield\Authentication\Actions\Email2FA::class
      *
+     * Custom Actions and Requirements:
+     *
+     * - All actions must implement \CodeIgniter\Shield\Authentication\Actions\ActionInterface.
+     * - Custom actions for "register" must have a class name that ends with the suffix "Activator" (e.g., `CustomSmsActivator`) ensure proper functionality.
+     *
      * @var array<string, class-string<ActionInterface>|null>
      */
     public array $actions = [
@@ -160,7 +165,7 @@ class Auth extends ShieldAuth
      * --------------------------------------------------------------------
      * If true, will always update the `last_active` datetime for the
      * logged-in user on every page request.
-     * This feature only works when session/tokens filter is active.
+     * This feature only works when session/tokens/hmac/chain/jwt filter is active.
      *
      * @see https://codeigniter4.github.io/shield/quick_start_guide/using_session_auth/#protecting-pages for set filters.
      */
@@ -429,6 +434,7 @@ class Auth extends ShieldAuth
      * @var class-string<UserModel>
      */
     public string $userProvider = \App\Models\UserModel::class;
+
     /**
      * Returns the URL that a user should be redirected
      * to after a successful login.

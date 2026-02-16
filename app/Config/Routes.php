@@ -29,6 +29,8 @@ $routes->post('captcha-request', 'Captcha::request');
 // Public Routes (no authentication required)
 $routes->get('/', 'Home::index');
 
+service('auth')->routes($routes);
+
 // User Routes Group
 $routes->group('', ['filter' => 'group:user'], static function ($routes) {
     $routes->get('dashboard', 'Dashboard::index');
