@@ -35,11 +35,11 @@ class Claim extends BaseController
     {
         $this->response->setHeader('Content-Type', 'application/json');
 
-        // Verify hCaptcha first
-        $hcaptchaResponse = $this->request->getPost('h-captcha-response');
-        if (!$this->verifyHCaptcha($hcaptchaResponse)) {
+        // Verify CAPTCHA first
+        $captchaAnswer = $this->request->getPost('captcha-answer');
+        if (!$this->verifyCaptcha($captchaAnswer)) {
             return $this->response->setJSON([
-                'error' => 'Invalid captcha response. Please try again.'
+                'error' => 'Invalid CAPTCHA response. Please try again.'
             ]);
         }
 
@@ -256,7 +256,6 @@ class Claim extends BaseController
 
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
 
             if ($httpCode === 200 && !empty($response)) {
                 $data = json_decode($response, true);
@@ -303,7 +302,6 @@ class Claim extends BaseController
 
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
 
             if ($httpCode === 200 && !empty($response)) {
                 $data = json_decode($response, true);
@@ -341,7 +339,7 @@ class Claim extends BaseController
     /**
      * Log fraud attempt with additional details
      */
-    private function logFraudAttempt(int $userId, string $abuseType, string $ipAddress, string $provider = null): void
+    private function logFraudAttempt(int $userId, string $abuseType, string $ipAddress, ?string $provider = null): void
     {
         $fraudData = [
             'user_id' => $userId,
@@ -358,35 +356,38 @@ class Claim extends BaseController
         $this->fraudUserModel->insert($fraudData);
     }
 
-    // Verify with hCaptcha 
-    private function verifyHCaptcha($response)
+    // Generate CAPTCHA image
+    public function captchaImage()
     {
-        if (empty($response)) {
+        $captcha = new \Mobicms\Captcha\Image();
+        $code = $captcha->getCode();
+
+        // Store code in session for validation
+        session()->set('captcha_code', strtolower($code));
+
+        // Return the image data URI
+        return $this->response
+            ->setHeader('Content-Type', 'text/plain')
+            ->setJSON(['image' => $captcha->getImage()]);
+    }
+
+    // Verify CAPTCHA
+    private function verifyCaptcha($userAnswer)
+    {
+        if (empty($userAnswer)) {
             return false;
         }
 
         try {
-            $secret = env('HCAPTCHA_SECRET_KEY');
-            $data = [
-                'secret' => $secret,
-                'response' => $response
-            ];
+            $storedCode = session()->get('captcha_code');
+            $userAnswer = strtolower(trim($userAnswer));
 
-            $verify = curl_init();
-            curl_setopt($verify, CURLOPT_URL, "https://hcaptcha.com/siteverify");
-            curl_setopt($verify, CURLOPT_POST, true);
-            curl_setopt($verify, CURLOPT_POSTFIELDS, http_build_query($data));
-            curl_setopt($verify, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($verify, CURLOPT_SSL_VERIFYPEER, false);
+            // Clear the session code after validation attempt
+            session()->remove('captcha_code');
 
-            $response = curl_exec($verify);
-            curl_close($verify);
-
-            $responseData = json_decode($response);
-            log_message('debug', $response);
-            return $responseData->success;
+            return $userAnswer === $storedCode;
         } catch (Exception $e) {
-            log_message('error', 'hCaptcha verification failed: ' . $e->getMessage());
+            log_message('error', 'CAPTCHA verification failed: ' . $e->getMessage());
             return false;
         }
     }

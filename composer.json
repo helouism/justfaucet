@@ -14,7 +14,8 @@
         "codeigniter4/framework": "^4.0",
         "codeigniter4/shield": "^1.2",
         "mahtab2003/faucetpay": "^1.0",
-        "michalsn/minifier": "^2.0"
+        "michalsn/minifier": "^2.0",
+        "mobicms/captcha": "^5.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",

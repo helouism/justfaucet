@@ -34,7 +34,7 @@ php spark shield:setup
 - Admin Dashboard
 - 5 Minutes Faucet Cooldown
 - VPN/Proxy/Tor abuse detection
-- bot detection with hCaptcha
+- bot detection with [CAPTCHA](https://github.com/mobicms/captcha)
 - Manual and auto ban(based on suspicious activity)
 
 

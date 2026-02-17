@@ -23,9 +23,6 @@ $routes->post('login', [LoginController::class, 'loginAction']);
 ;
 $routes->get('register', '\App\Controllers\Auth\RegisterController::registerView');
 $routes->post('register', '\App\Controllers\Auth\RegisterController::registerAction');
-$routes->get('captcha-request', 'Captcha::request');
-$routes->post('captcha-request', 'Captcha::request');
-
 // Public Routes (no authentication required)
 $routes->get('/', 'Home::index');
 
@@ -42,6 +39,7 @@ $routes->group('', ['filter' => 'group:user'], static function ($routes) {
     $routes->get('claim', 'Claim::index');
     $routes->post('claim/action', 'Claim::store');
     $routes->get('claim/status', 'Claim::show');
+    $routes->get('claim/captcha-image', 'Claim::captchaImage');
     $routes->get('referral', 'Referral::index');
     $routes->get('withdrawal', 'Withdrawal::index');
     $routes->post('withdrawal/send', 'Withdrawal::sendPayment');

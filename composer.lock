@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3be2d81ed3855bcc4e0a094e0ed482c",
+    "content-hash": "6740123479103c7057e208724cc481f2",
     "packages": [
         {
             "name": "codeigniter4/framework",
@@ -484,6 +484,62 @@
                 "source": "https://github.com/michalsn/minifier/tree/v2.0.0"
             },
             "time": "2023-12-27T12:32:15+00:00"
+        },
+        {
+            "name": "mobicms/captcha",
+            "version": "5.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mobicms/captcha.git",
+                "reference": "97d8f5585eb0cec236d0cb608b817df5ede535e3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mobicms/captcha/zipball/97d8f5585eb0cec236d0cb608b817df5ede535e3",
+                "reference": "97d8f5585eb0cec236d0cb608b817df5ede535e3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "php": "~8.2 || ~8.3 || ~8.4"
+            },
+            "require-dev": {
+                "pestphp/pest": "^3.8",
+                "slevomat/coding-standard": "^8.22",
+                "squizlabs/php_codesniffer": "^3.13",
+                "vimeo/psalm": "^6.13"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mobicms\\Captcha\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oleg Kasyanov",
+                    "email": "oleg@batumi.org",
+                    "homepage": "https://github.com/batumibiz",
+                    "role": "Team Lead, Developer"
+                },
+                {
+                    "name": "Our Contributors",
+                    "homepage": "https://github.com/mobicms/captcha/graphs/contributors"
+                }
+            ],
+            "description": "A simple PHP CAPTCHA library",
+            "keywords": [
+                "captcha"
+            ],
+            "support": {
+                "issues": "https://github.com/mobicms/captcha/issues",
+                "source": "https://github.com/mobicms/captcha"
+            },
+            "time": "2025-09-20T10:36:55+00:00"
         },
         {
             "name": "psr/log",

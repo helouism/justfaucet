@@ -20,21 +20,31 @@
                     </div>
                 </div>
 
-                <!-- hCaptcha Container -->
+                <!-- CAPTCHA Container -->
                 <div id="captcha-container" class="mb-4" style="display: none;">
                     <div class="alert alert-info border-0 shadow-sm mb-3" role="alert">
                         <div class="d-flex align-items-center">
                             <i class="bi bi-shield-check fs-4 me-2"></i>
                             <div>
-                                <strong>Complete the captcha below to claim</strong>
+                                <strong>Solve the CAPTCHA below to claim</strong>
 
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
-                        <div class="h-captcha" data-sitekey="<?= env(
-                            "HCAPTCHA_SITE_KEY"
-                        ) ?>" data-callback="hcaptchaCallback" data-expired-callback="hcaptchaExpiredCallback">
+                    <div class="card bg-light border-1 p-3 mb-3">
+                        <div class="d-flex gap-3 align-items-center">
+                            <div class="flex-shrink-0">
+                                <img id="captcha-image" alt="CAPTCHA"
+                                    class="img-fluid" style="max-width: 150px; border: 1px solid #ddd; padding: 5px;">
+                            </div>
+                            <div class="flex-grow-1">
+                                <input type="text" id="captcha-input" class="form-control form-control-lg"
+                                    placeholder="Enter the characters above" autocomplete="off">
+                            </div>
+                            <button type="button" class="btn btn-outline-secondary" id="refresh-captcha"
+                                title="Refresh CAPTCHA">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -62,41 +72,61 @@
 
 <?= $this->endSection() ?>
 <?= $this->section("scripts") ?>
-<!-- Hcaptcha & sweetalert2  -->
-<script src="https://js.hcaptcha.com/1/api.js?hl=en" async defer></script>
+<!-- CAPTCHA & SweetAlert2 -->
+<script>
+    // Define variables globally
+    let captchaCompleted = false;
+    let canClaimNow = false;
+    let countdown;
 
+    // Load CAPTCHA image from server
+    function loadCaptchaImage() {
+        $.get('<?= site_url("claim/captcha-image") ?>', function(response) {
+            if (response.image) {
+                $('#captcha-image').attr('src', response.image);
+            }
+        });
+    }
+
+    function updateButtonState() {
+        const $btn = $('#claimButton');
+        const $btnText = $('#button-text');
+
+        if (!$btn.length) return;
+
+        if (!canClaimNow) {
+            $btn.prop('disabled', true);
+            $btnText.text('Wait for Timer');
+        } else if (!captchaCompleted) {
+            $btn.prop('disabled', true).removeClass('btn-success').addClass('btn-primary');
+            $btnText.text('Solve CAPTCHA First');
+        } else {
+            $btn.prop('disabled', false).removeClass('btn-primary').addClass('btn-success');
+            $btnText.text('Claim Now');
+        }
+    }
+
+    function checkCaptchaInput() {
+        const captchaInput = $('#captcha-input').val().trim();
+        captchaCompleted = captchaInput.length > 0;
+        updateButtonState();
+    }
+</script>
 
 <script>
     $(document).ready(function () {
-        let countdown;
-        let captchaCompleted = false;
-        let canClaimNow = false;
-
-        function updateButtonState() {
-            const $btn = $('#claimButton');
-            const $btnText = $('#button-text');
-
-            if (!canClaimNow) {
-                $btn.prop('disabled', true);
-                $btnText.text('Wait for Timer');
-            } else if (!captchaCompleted) {
-                $btn.prop('disabled', true).removeClass('btn-success').addClass('btn-primary');
-                $btnText.text('Solve Captcha First');
-            } else {
-                $btn.prop('disabled', false).removeClass('btn-primary').addClass('btn-success');
-                $btnText.text('Claim Now');
-            }
-        }
 
         function showCaptcha() {
             $('#captcha-container').slideDown();
+            loadCaptchaImage();
+            $('#captcha-input').focus();
             updateButtonState();
         }
 
         function hideCaptcha() {
             $('#captcha-container').slideUp();
+            $('#captcha-input').val('');
             captchaCompleted = false;
-            hcaptcha.reset();
             updateButtonState();
         }
 
@@ -196,17 +226,6 @@
             });
         }
 
-        // hCaptcha callback functions
-        window.hcaptchaCallback = function () {
-            captchaCompleted = true;
-            updateButtonState();
-        };
-
-        window.hcaptchaExpiredCallback = function () {
-            captchaCompleted = false;
-            updateButtonState();
-        };
-
         $('#claimButton').click(function () {
             if (!captchaCompleted || !canClaimNow) {
                 return;
@@ -220,14 +239,14 @@
             $btnText.text('Processing...');
             $spinner.show();
 
-            const hcaptchaResponse = hcaptcha.getResponse();
+            const captchaAnswer = $('#captcha-input').val();
 
             $.ajax({
                 url: '<?= site_url("claim/action") ?>',
                 method: 'POST',
                 data: {
                     '<?= csrf_token() ?>': '<?= csrf_hash() ?>',
-                    'h-captcha-response': hcaptchaResponse
+                    'captcha-answer': captchaAnswer
                 },
                 success: function (response) {
                     $spinner.hide();
@@ -267,7 +286,8 @@
                         }
                     } else {
                         captchaCompleted = false;
-                        hcaptcha.reset();
+                        $('#captcha-input').val('');
+                        loadCaptchaImage();
                         updateButtonState();
 
 
@@ -289,7 +309,8 @@
                 error: function (xhr) {
                     $spinner.hide();
                     captchaCompleted = false;
-                    hcaptcha.reset();
+                    $('#captcha-input').val('');
+                    loadCaptchaImage();
                     updateButtonState();
 
                     Swal.fire({
@@ -303,6 +324,19 @@
                     });
                 }
             });
+        });
+
+        // Refresh CAPTCHA button
+        $('#refresh-captcha').click(function () {
+            $('#captcha-input').val('');
+            loadCaptchaImage();
+            captchaCompleted = false;
+            updateButtonState();
+        });
+
+        // Check CAPTCHA input in real-time
+        $('#captcha-input').on('keyup', function () {
+            checkCaptchaInput();
         });
 
         // Check claim status on page load
