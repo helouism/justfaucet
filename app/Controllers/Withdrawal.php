@@ -18,7 +18,7 @@ class Withdrawal extends BaseController
 
         // Initialize FaucetPay API
         $this->faucetPayApi = new Api(getenv('FAUCETPAY_API_KEY'), 'USDT');
-        // You'll need to set your API key - either from config or environment
+
 
     }
 

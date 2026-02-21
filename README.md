@@ -1,53 +1,69 @@
-# JustFaucet - A Simple Crypto Faucet Website built with CodeIgniter 4
+# JustFaucet
+
+A secure, open-source crypto faucet platform built with CodeIgniter 4, featuring advanced fraud detection and administration capabilities.
+
 ![Faucet](https://github.com/user-attachments/assets/5221fad3-6fb1-46a2-b07a-6ab911081054)
 
-## What is JustFaucet?
+## Features
 
-A simple, secure crypto faucet website with comprehensive fraud prevention and admin management features.
+- **Admin Dashboard** - Manage users, payouts, and settings
+- **Fraud Prevention** - VPN/Proxy/Tor detection, CAPTCHA, and behavioral analysis
+- **Flexible Configuration** - Cooldown periods, base amounts, and referral bonuses
+- **Automatic Payouts** - Scheduled balance refresh via cron jobs
+- **Security-First** - Built-in user banning and suspicion-based account monitoring
 
-### Installation Steps
+## Quick Start
 
-1. Clone this repo
-```console
+### Prerequisites
+- PHP 8.0+
+- Composer
+- MySQL/MariaDB
+
+### Installation
+
+1. Clone the repository:
+```bash
 git clone https://github.com/helouism/justfaucet.git
+cd justfaucet
 ```
-2. Install package dependencies
-```console
+
+2. Install dependencies:
+```bash
 composer install
 ```
-4. Rename `env.example` to `.env`
-5. Configure your database and email credentials in the `.env` file, do not overwrite the `Auth.php`, `AuthGroups.php`, `AuthToken.php` file
-6. Run this command to setup CodeIgniter Shield and follow the instructions
-```console
+
+3. Create environment file:
+```bash
+cp env.example .env
+```
+
+4. Configure settings in `.env`:
+   - Database credentials
+   - Email settings
+   - API keys (FaucetPay, IPHub, VPNApi)
+   - Faucet parameters (cooldown, base amount, referral percentage)
+
+5. Initialize authentication:
+```bash
 php spark shield:setup
 ```
 
-10. Configure your FAUCETPAY, IPHUB, VPNAPI API KEY in `.env` file
-11. Setup your faucet settings like cooldown, base amount and referral bonus commission percentage in the `.env` file
+> **Note:** Do not overwrite `Auth.php`, `AuthGroups.php`, or `AuthToken.php` config files.
 
-12. To set up the cron job on your server to run every 5 minutes, add this to your crontab:
-```console
-*/5 * * * * cd /path/to/your/project && php spark faucet:refresh-balance
+6. (Optional) Set up automated payouts by adding to crontab:
+```bash
+*/5 * * * * cd /path/to/justfaucet && php spark faucet:refresh-balance
 ```
 
-### Features
-- Admin Dashboard
-- 5 Minutes Faucet Cooldown
-- VPN/Proxy/Tor abuse detection
-- bot detection with [CAPTCHA](https://github.com/mobicms/captcha)
-- Manual and auto ban(based on suspicious activity)
 
+## Technology Stack
 
-### Tech Stack
+| Layer | Technologies |
+|-------|---|
+| **Backend** | CodeIgniter 4, CodeIgniter Shield |
+| **Frontend** | Bootstrap 5, jQuery, Sweetalert2, FontAwesome |
+| **Security** | CAPTCHA, VPN Detection, Fraud Prevention |
 
-#### Backend
-CodeIgniter 4 with CodeIgniter Shield for Authentication
+## Contributing
 
-#### Frontend
-- Bootstrap 5
-- Sweetalert2
-- jQuery
-- FontAwesome
-
-## Contribution
-Feel free to contribute to the project.
+Contributions are welcome! Feel free to submit issues and pull requests.
